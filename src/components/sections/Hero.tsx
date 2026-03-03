@@ -1,14 +1,41 @@
 'use client';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect } from 'react';
+
+const images = [
+    '/images/tanker-aerial.jpg',
+    '/images/herosection.jpg'
+];
 
 export default function Hero() {
+    const [index, setIndex] = useState(0);
+
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setIndex((prev) => (prev + 1) % images.length);
+        }, 6000);
+        return () => clearInterval(timer);
+    }, []);
+
     return (
         <section className="relative h-screen flex items-center bg-brand-navy overflow-hidden">
-            {/* Background Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-r from-brand-navy via-brand-navy/80 to-transparent z-10"></div>
+            {/* Background Images Slider */}
+            <div className="absolute inset-0 z-0">
+                <AnimatePresence mode="wait">
+                    <motion.div
+                        key={index}
+                        initial={{ opacity: 0, scale: 1.1 }}
+                        animate={{ opacity: 0.4, scale: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 2, ease: "easeInOut" }}
+                        className="absolute inset-0 bg-cover bg-center"
+                        style={{ backgroundImage: `url(${images[index]})` }}
+                    />
+                </AnimatePresence>
+            </div>
 
-            {/* Visual background (Nigerian offshore vessel) */}
-            <div className="absolute inset-0 bg-[url('/images/tanker-aerial.jpg')] bg-cover bg-center"></div>
+            {/* Global Background Overlay for text readability */}
+            <div className="absolute inset-0 bg-gradient-to-r from-brand-navy via-brand-navy/60 to-transparent z-10"></div>
 
             <div className="relative z-20 max-w-7xl mx-auto px-6 w-full py-20 md:py-0">
                 <motion.div

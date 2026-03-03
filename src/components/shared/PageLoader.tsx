@@ -56,10 +56,10 @@ export default function PageLoader() {
                     <motion.div
                         animate={{ scale: [1, 1.2, 1], opacity: [0.1, 0.2, 0.1] }}
                         transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                        className="absolute w-[500px] h-[500px] bg-brand-orange rounded-full blur-[150px] opacity-20 pointer-events-none"
+                        className="absolute w-[300px] md:w-[500px] h-[300px] md:h-[500px] bg-brand-orange rounded-full blur-[100px] md:blur-[150px] opacity-20 pointer-events-none"
                     />
 
-                    <div className="flex space-x-1 relative z-10 overflow-hidden text-white font-bold text-3xl md:text-5xl tracking-widest uppercase">
+                    <div className="flex space-x-1 relative z-10 overflow-hidden text-white font-bold text-xl md:text-5xl tracking-widest uppercase">
                         {text.map((char, index) => (
                             <motion.span
                                 key={index}

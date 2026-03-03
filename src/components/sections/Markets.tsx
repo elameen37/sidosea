@@ -40,7 +40,7 @@ export default function Markets() {
 
                     <div className="relative aspect-video lg:aspect-video bg-brand-navy rounded-sm overflow-hidden group">
                         <img
-                            src="/images/refinery-sunset.jpg"
+                            src="/images/marketweserve2.jpg"
                             alt="Global Refining"
                             className="absolute inset-0 w-full h-full object-cover opacity-50 group-hover:scale-110 transition-transform duration-[2000ms]"
                         />
