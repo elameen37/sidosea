@@ -1,0 +1,78 @@
+'use client';
+import { useState, useEffect } from 'react';
+import { Loader2, Save } from 'lucide-react';
+
+export default function ContentEditor() {
+    const [content, setContent] = useState<any>(null);
+    const [loading, setLoading] = useState(true);
+    const [saving, setSaving] = useState(false);
+
+    useEffect(() => {
+        fetch('/api/content')
+            .then(res => res.json())
+            .then(data => {
+                setContent(data);
+                setLoading(false);
+            });
+    }, []);
+
+    const handleSave = async () => {
+        setSaving(true);
+        await fetch('/api/content', {
+            method: 'POST',
+            body: JSON.stringify(content),
+        });
+        setSaving(false);
+    };
+
+    if (loading) return <div className="flex justify-center p-20"><Loader2 className="animate-spin" /></div>;
+
+    return (
+        <div className="space-y-8">
+            <div className="flex justify-between items-center">
+                <h1 className="text-2xl font-bold text-brand-navy uppercase tracking-widest">Content Editor</h1>
+                <button
+                    onClick={handleSave}
+                    disabled={saving}
+                    className="btn-primary flex items-center gap-2"
+                >
+                    {saving ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
+                    Save Changes
+                </button>
+            </div>
+
+            <div className="grid grid-cols-1 gap-8">
+                <div className="bg-white p-8 rounded-sm shadow-sm border border-gray-100 space-y-6">
+                    <h3 className="text-sm font-bold uppercase tracking-widest text-brand-orange border-b pb-2">Hero Section</h3>
+                    <div className="space-y-4">
+                        <div>
+                            <label className="text-[10px] font-bold uppercase text-gray-400">Headline</label>
+                            <input
+                                value={content.homepage.headline}
+                                onChange={e => setContent({ ...content, homepage: { ...content.homepage, headline: e.target.value } })}
+                                className="w-full bg-gray-50 border p-3 text-sm mt-1 outline-none focus:border-brand-orange"
+                            />
+                        </div>
+                        <div>
+                            <label className="text-[10px] font-bold uppercase text-gray-400">Subheadline</label>
+                            <textarea
+                                value={content.homepage.subheadline}
+                                onChange={e => setContent({ ...content, homepage: { ...content.homepage, subheadline: e.target.value } })}
+                                className="w-full bg-gray-50 border p-3 text-sm mt-1 outline-none focus:border-brand-orange h-24"
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                <div className="bg-white p-8 rounded-sm shadow-sm border border-gray-100 space-y-6">
+                    <h3 className="text-sm font-bold uppercase tracking-widest text-brand-orange border-b pb-2">About Content</h3>
+                    <textarea
+                        value={content.about.content}
+                        onChange={e => setContent({ ...content, about: { ...content.about, content: e.target.value } })}
+                        className="w-full bg-gray-50 border p-3 text-sm mt-1 outline-none focus:border-brand-orange h-32"
+                    />
+                </div>
+            </div>
+        </div>
+    );
+}

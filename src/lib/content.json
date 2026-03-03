@@ -1,0 +1,30 @@
+{
+  "homepage": {
+    "headline": "Secure, Compliant Access to Nigerian Bonny Light Crude",
+    "subheadline": "Verified allocations. Structured lifting. Global delivery.",
+    "cta_primary": "Request Supply Discussion",
+    "cta_secondary": "Download Corporate Profile"
+  },
+  "about": {
+    "title": "A Structured Transaction Facilitator for Global Energy",
+    "content": "SIDOSEA Logistics operates as a high-authority crude supply operator, bridging the gap between Nigerian production and international refinery demand. We specialize in the facilitation of Bonny Light Crude Oil (BLCO)..."
+  },
+  "risk_matrix": [
+    {
+      "risk": "Title Fraud",
+      "mitigation": "Verified mandate chain"
+    },
+    {
+      "risk": "Payment Default",
+      "mitigation": "LC/SBLC structures"
+    },
+    {
+      "risk": "Operational Variance",
+      "mitigation": "Independent inspection"
+    },
+    {
+      "risk": "Regulatory Delays",
+      "mitigation": "Pre-clearance management"
+    }
+  ]
+}

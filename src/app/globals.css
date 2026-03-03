@@ -1,0 +1,57 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+
+  /* Brand Colors */
+  --neon-orange: #FF5F1F;
+  --navy-blue: #0A192F;
+  --off-white: #F8F9FA;
+
+  /* Primary Palette */
+  --primary: var(--neon-orange);
+  --secondary: var(--navy-blue);
+  --accent: var(--off-white);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: rgb(var(--background-end-rgb));
+  font-family: 'IBM Plex Sans', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-[var(--neon-orange)] text-white px-8 py-3 rounded-sm font-semibold transition-all hover:bg-[var(--navy-blue)] active:scale-95;
+  }
+
+  .btn-secondary {
+    @apply border-2 border-[var(--navy-blue)] text-[var(--navy-blue)] px-8 py-3 rounded-sm font-semibold transition-all hover:bg-[var(--navy-blue)] hover:text-white active:scale-95;
+  }
+
+  .section-container {
+    @apply max-w-7xl mx-auto px-6 py-24;
+  }
+
+  .glass-nav {
+    @apply sticky top-0 z-50 bg-[var(--navy-blue)]/90 backdrop-blur-md border-b border-white/10;
+  }
+
+  .institutional-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8;
+  }
+}
