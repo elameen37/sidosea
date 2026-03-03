@@ -6,6 +6,7 @@ import Lifecycle from '@/components/sections/Lifecycle';
 import Markets from '@/components/sections/Markets';
 import Risk from '@/components/sections/Risk';
 import Contact from '@/components/sections/Contact';
+import ContactInfo from '@/components/sections/ContactInfo';
 
 export default function Home() {
     return (
@@ -18,6 +19,7 @@ export default function Home() {
             <Markets />
             <Risk />
             <Contact />
+            <ContactInfo />
 
             <footer className="bg-brand-navy py-12 border-t border-white/5">
                 <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-8">

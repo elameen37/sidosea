@@ -19,14 +19,14 @@ export default function ValueBlocks() {
     ];
 
     return (
-        <section className="bg-white py-24">
+        <section className="bg-white py-16 md:py-24">
             <div className="max-w-7xl mx-auto px-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12">
                     {blocks.map((block, i) => (
-                        <div key={i} className="group cursor-default">
-                            <div className="w-12 h-1 bg-brand-orange mb-6 group-hover:w-full transition-all duration-500"></div>
-                            <h3 className="text-brand-navy font-bold text-lg mb-4 uppercase tracking-wider">{block.title}</h3>
-                            <p className="text-gray-600 leading-relaxed text-sm">{block.desc}</p>
+                        <div key={i} className="group cursor-default text-center sm:text-left">
+                            <div className="w-12 h-1 bg-brand-orange mb-6 group-hover:w-full transition-all duration-500 mx-auto sm:mx-0"></div>
+                            <h3 className="text-brand-navy font-bold text-sm md:text-lg mb-4 uppercase tracking-tight">{block.title}</h3>
+                            <p className="text-gray-600 leading-relaxed text-[10px] md:text-sm font-light max-w-xs mx-auto sm:mx-0">{block.desc}</p>
                         </div>
                     ))}
                 </div>

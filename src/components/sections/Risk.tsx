@@ -20,7 +20,7 @@ export default function Risk() {
                     </p>
                 </div>
 
-                <div className="overflow-hidden border border-gray-200 rounded-sm">
+                <div className="hidden md:block overflow-hidden border border-gray-200 rounded-sm">
                     <table className="w-full text-left border-collapse">
                         <thead>
                             <tr className="bg-brand-navy text-white uppercase text-[10px] tracking-widest">
@@ -50,6 +50,28 @@ export default function Risk() {
                             ))}
                         </tbody>
                     </table>
+                </div>
+
+                {/* Mobile Card View */}
+                <div className="md:hidden space-y-4">
+                    {matrix.map((item, i) => (
+                        <motion.div
+                            key={i}
+                            initial={{ opacity: 0, y: 10 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            transition={{ delay: i * 0.1 }}
+                            className="bg-gray-50 p-6 border border-gray-100"
+                        >
+                            <div className="flex items-center gap-3 mb-4">
+                                <div className="w-1.5 h-1.5 bg-brand-orange"></div>
+                                <h3 className="text-brand-navy font-bold uppercase text-xs tracking-wider">{item.risk}</h3>
+                            </div>
+                            <p className="text-gray-600 text-[10px] leading-relaxed font-light">
+                                <span className="text-brand-navy font-bold block mb-1">Mitigation Strategy:</span>
+                                {item.mitigation}
+                            </p>
+                        </motion.div>
+                    ))}
                 </div>
             </div>
         </section>

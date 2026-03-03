@@ -15,26 +15,27 @@ export default function Lifecycle() {
     ];
 
     return (
-        <section id="services" className="bg-brand-navy py-24">
+        <section id="services" className="bg-brand-navy py-16 md:py-24">
             <div className="max-w-7xl mx-auto px-6">
-                <div className="mb-16">
-                    <span className="text-brand-orange font-bold tracking-widest uppercase text-xs mb-4 block">Transaction Blueprint</span>
-                    <h2 className="text-4xl font-bold text-white uppercase">The Lifecycle of a Secure Trade</h2>
+                <div className="mb-12 md:mb-16 text-center md:text-left">
+                    <span className="text-brand-orange font-bold tracking-[0.3em] uppercase text-[10px] mb-4 block">Transaction Blueprint</span>
+                    <h2 className="text-3xl md:text-4xl font-bold text-white uppercase tracking-tight">The Lifecycle of a Secure Trade</h2>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-px bg-white/10 border border-white/10">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-px bg-white/10 border border-white/10">
                     {steps.map((step, i) => (
                         <motion.div
                             key={i}
                             onMouseEnter={() => setActiveStep(i)}
                             onMouseLeave={() => setActiveStep(null)}
-                            className="relative bg-brand-navy p-8 h-80 flex flex-col justify-between cursor-pointer group transition-all duration-500 overflow-hidden"
+                            onClick={() => setActiveStep(activeStep === i ? null : i)}
+                            className="relative bg-brand-navy p-6 md:p-8 h-64 md:h-80 flex flex-col justify-between cursor-pointer group transition-all duration-500 overflow-hidden"
                         >
-                            <div className="absolute top-0 left-0 w-1 h-0 bg-brand-orange group-hover:h-full transition-all duration-500"></div>
+                            <div className={`absolute top-0 left-0 w-1 bg-brand-orange transition-all duration-500 ${activeStep === i ? 'h-full' : 'h-0 group-hover:h-full'}`}></div>
 
                             <div className="relative z-10">
-                                <span className="text-brand-orange font-mono text-4xl font-bold block mb-6 opacity-30 group-hover:opacity-100 transition-opacity">0{i + 1}</span>
-                                <h3 className="text-white font-bold text-sm uppercase tracking-wider leading-relaxed">{step.title}</h3>
+                                <span className={`text-brand-orange font-mono text-3xl md:text-4xl font-bold block mb-4 md:mb-6 transition-opacity ${activeStep === i ? 'opacity-100' : 'opacity-30 group-hover:opacity-100'}`}>0{i + 1}</span>
+                                <h3 className="text-white font-bold text-xs md:text-sm uppercase tracking-wider leading-relaxed">{step.title}</h3>
                             </div>
 
                             <motion.div
@@ -45,11 +46,11 @@ export default function Lifecycle() {
                                 }}
                                 className="relative z-10"
                             >
-                                <p className="text-white/60 text-xs leading-relaxed">{step.desc}</p>
+                                <p className="text-white/60 text-[10px] md:text-xs leading-relaxed">{step.desc}</p>
                             </motion.div>
 
                             {/* Decorative Number Background */}
-                            <div className="absolute -bottom-10 -right-10 text-[10rem] font-bold text-white/[0.02] pointer-events-none group-hover:text-white/[0.05] transition-all">
+                            <div className="absolute -bottom-10 -right-10 text-[8rem] md:text-[10rem] font-bold text-white/[0.02] pointer-events-none group-hover:text-white/[0.05] transition-all">
                                 {i + 1}
                             </div>
                         </motion.div>

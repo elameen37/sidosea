@@ -66,19 +66,46 @@ export default function Navbar() {
                 {/* Mobile Menu Dropdown */}
                 <AnimatePresence>
                     {mobileMenuOpen && (
-                        <motion.div
-                            initial={{ opacity: 0, height: 0 }}
-                            animate={{ opacity: 1, height: 'auto' }}
-                            exit={{ opacity: 0, height: 0 }}
-                            className="md:hidden mt-4 pt-4 border-t border-white/10 overflow-hidden"
-                        >
-                            <div className="flex flex-col gap-4 text-white/80 font-medium text-sm tracking-wide uppercase pb-4">
-                                <Link onClick={toggleMenu} href="#about" className="hover:text-brand-orange transition-colors block py-2">About</Link>
-                                <Link onClick={toggleMenu} href="#services" className="hover:text-brand-orange transition-colors block py-2">Services</Link>
-                                <Link onClick={toggleMenu} href="#compliance" className="hover:text-brand-orange transition-colors block py-2">Compliance</Link>
-                                <Link onClick={toggleMenu} href="#contact" className="btn-primary py-3 text-center mt-2 w-full">Request Supply</Link>
-                            </div>
-                        </motion.div>
+                        <>
+                            {/* Backdrop shadow */}
+                            <motion.div
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                onClick={() => setMobileMenuOpen(false)}
+                                className="md:hidden fixed inset-0 bg-brand-navy/60 backdrop-blur-sm z-[-1]"
+                            />
+
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.95, y: -20 }}
+                                animate={{ opacity: 1, scale: 1, y: 0 }}
+                                exit={{ opacity: 0, scale: 0.95, y: -20 }}
+                                className="md:hidden absolute top-full left-4 right-4 mt-2 bg-brand-navy border border-white/10 shadow-2xl overflow-hidden rounded-sm"
+                            >
+                                <div className="p-8 flex flex-col gap-6 text-white/90 font-medium text-sm tracking-[0.2em] uppercase">
+                                    <Link onClick={toggleMenu} href="#about" className="hover:text-brand-orange transition-colors flex items-center justify-between group">
+                                        About <motion.div animate={{ x: [0, 5, 0] }} transition={{ repeat: Infinity, duration: 2 }} className="text-white/20 group-hover:text-brand-orange"> → </motion.div>
+                                    </Link>
+                                    <Link onClick={toggleMenu} href="#services" className="hover:text-brand-orange transition-colors flex items-center justify-between group">
+                                        Services <motion.div animate={{ x: [0, 5, 0] }} transition={{ repeat: Infinity, duration: 2, delay: 0.2 }} className="text-white/20 group-hover:text-brand-orange"> → </motion.div>
+                                    </Link>
+                                    <Link onClick={toggleMenu} href="#compliance" className="hover:text-brand-orange transition-colors flex items-center justify-between group">
+                                        Compliance <motion.div animate={{ x: [0, 5, 0] }} transition={{ repeat: Infinity, duration: 2, delay: 0.4 }} className="text-white/20 group-hover:text-brand-orange"> → </motion.div>
+                                    </Link>
+
+                                    <div className="h-px bg-white/10 my-2" />
+
+                                    <Link onClick={toggleMenu} href="#contact" className="w-full bg-brand-orange text-white py-4 text-center font-bold tracking-[0.3em] hover:bg-white hover:text-brand-navy transition-all active:scale-95">
+                                        Request Supply
+                                    </Link>
+
+                                    <div className="flex items-center justify-center gap-4 pt-2">
+                                        <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+                                        <span className="text-green-500 text-[9px] font-bold tracking-[0.3em]">MARKETS OPEN</span>
+                                    </div>
+                                </div>
+                            </motion.div>
+                        </>
                     )}
                 </AnimatePresence>
             </div>

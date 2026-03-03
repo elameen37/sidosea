@@ -46,14 +46,14 @@ export default function Contact() {
             {/* Background Accent */}
             <div className="absolute top-0 right-0 w-1/3 h-full bg-brand-orange/5 -skew-x-12 transform translate-x-1/2"></div>
 
-            <div className="max-w-7xl mx-auto px-6 relative z-10">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
-                    <div>
-                        <span className="text-brand-orange font-bold tracking-widest uppercase text-xs mb-4 block">Direct Engagement</span>
-                        <h2 className="text-4xl font-bold text-white uppercase mb-8 leading-tight">
+            <div className="max-w-7xl mx-auto px-6 relative z-10 py-12 md:py-0">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-16">
+                    <div className="text-center lg:text-left">
+                        <span className="text-brand-orange font-bold tracking-[0.3em] uppercase text-[10px] mb-4 block">Direct Engagement</span>
+                        <h2 className="text-3xl md:text-4xl font-bold text-white uppercase mb-8 leading-tight tracking-tight">
                             Serious Buyers. <br />Structured Transactions.
                         </h2>
-                        <div className="space-y-6 text-white/60 text-sm font-light leading-relaxed max-w-md">
+                        <div className="space-y-6 text-white/60 text-xs md:text-sm font-light leading-relaxed max-w-md mx-auto lg:mx-0">
                             <p>
                                 SIDOSEA Logistics only engages with verified institutional buyers, refineries, and established trading houses.
                             </p>
@@ -61,8 +61,8 @@ export default function Contact() {
                                 Submissions are screened against international compliance databases. Rejection is automatic for non-compliant banking instruments or unverifiable corporate identities.
                             </p>
                             <div className="pt-8 border-t border-white/10">
-                                <p className="text-brand-orange font-bold uppercase tracking-widest mb-2">Compliance Requirement</p>
-                                <p>All engagement requires a signed NDA and proof of banking capability (LC/SBLC/MT103).</p>
+                                <p className="text-brand-orange font-bold uppercase tracking-[0.2em] mb-2 text-[10px]">Compliance Requirement</p>
+                                <p className="text-[10px] md:text-xs">All engagement requires a signed NDA and proof of banking capability (LC/SBLC/MT103).</p>
                             </div>
                         </div>
                     </div>
@@ -70,7 +70,7 @@ export default function Contact() {
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
-                        className="bg-white p-10 rounded-sm shadow-2xl"
+                        className="bg-white p-6 md:p-10 rounded-sm shadow-2xl"
                     >
                         {status === 'success' ? (
                             <div className="text-center py-12">
