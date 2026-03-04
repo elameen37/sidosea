@@ -4,7 +4,6 @@ import { useState, useEffect, useRef } from 'react';
 import { Instagram, Facebook, Linkedin } from 'lucide-react';
 
 const images = [
-    '/images/herosection.jpg',
     '/images/2.jpg',
     '/images/3.jpg'
 ];
