@@ -44,6 +44,7 @@ export default function Navbar() {
                         <Link href="#about" className="hover:text-brand-orange transition-colors">About</Link>
                         <Link href="#services" className="hover:text-brand-orange transition-colors">Services</Link>
                         <Link href="#compliance" className="hover:text-brand-orange transition-colors">Compliance</Link>
+                        <Link href="#contact-info" className="hover:text-brand-orange transition-colors">Global Presence</Link>
                         <Link href="#contact" className="btn-primary py-2 px-6">Request Supply</Link>
                     </div>
 
@@ -91,6 +92,9 @@ export default function Navbar() {
                                     </Link>
                                     <Link onClick={toggleMenu} href="#compliance" className="hover:text-brand-orange transition-colors flex items-center justify-between group">
                                         Compliance <motion.div animate={{ x: [0, 5, 0] }} transition={{ repeat: Infinity, duration: 2, delay: 0.4 }} className="text-white/20 group-hover:text-brand-orange"> → </motion.div>
+                                    </Link>
+                                    <Link onClick={toggleMenu} href="#contact-info" className="hover:text-brand-orange transition-colors flex items-center justify-between group">
+                                        Global Presence <motion.div animate={{ x: [0, 5, 0] }} transition={{ repeat: Infinity, duration: 2, delay: 0.6 }} className="text-white/20 group-hover:text-brand-orange"> → </motion.div>
                                     </Link>
 
                                     <div className="h-px bg-white/10 my-2" />

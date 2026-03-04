@@ -72,6 +72,64 @@ export default function ContentEditor() {
                         className="w-full bg-gray-50 border p-3 text-sm mt-1 outline-none focus:border-brand-orange h-32"
                     />
                 </div>
+
+                <div className="bg-white p-8 rounded-sm shadow-sm border border-gray-100 space-y-6">
+                    <h3 className="text-sm font-bold uppercase tracking-widest text-brand-orange border-b pb-2">Global Presence Locations</h3>
+                    {content.locations && content.locations.map((loc: any, index: number) => (
+                        <div key={index} className="p-4 border border-gray-100 bg-gray-50 space-y-4">
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label className="text-[10px] font-bold uppercase text-gray-400">City</label>
+                                    <input
+                                        value={loc.city}
+                                        onChange={e => {
+                                            const newLocs = [...content.locations];
+                                            newLocs[index].city = e.target.value;
+                                            setContent({ ...content, locations: newLocs });
+                                        }}
+                                        className="w-full bg-white border p-2 text-xs mt-1 outline-none focus:border-brand-orange"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="text-[10px] font-bold uppercase text-gray-400">Type</label>
+                                    <input
+                                        value={loc.type}
+                                        onChange={e => {
+                                            const newLocs = [...content.locations];
+                                            newLocs[index].type = e.target.value;
+                                            setContent({ ...content, locations: newLocs });
+                                        }}
+                                        className="w-full bg-white border p-2 text-xs mt-1 outline-none focus:border-brand-orange"
+                                    />
+                                </div>
+                            </div>
+                            <div>
+                                <label className="text-[10px] font-bold uppercase text-gray-400">Address</label>
+                                <input
+                                    value={loc.address}
+                                    onChange={e => {
+                                        const newLocs = [...content.locations];
+                                        newLocs[index].address = e.target.value;
+                                        setContent({ ...content, locations: newLocs });
+                                    }}
+                                    className="w-full bg-white border p-2 text-xs mt-1 outline-none focus:border-brand-orange"
+                                />
+                            </div>
+                            <div>
+                                <label className="text-[10px] font-bold uppercase text-gray-400">Phone</label>
+                                <input
+                                    value={loc.phone}
+                                    onChange={e => {
+                                        const newLocs = [...content.locations];
+                                        newLocs[index].phone = e.target.value;
+                                        setContent({ ...content, locations: newLocs });
+                                    }}
+                                    className="w-full bg-white border p-2 text-xs mt-1 outline-none focus:border-brand-orange"
+                                />
+                            </div>
+                        </div>
+                    ))}
+                </div>
             </div>
         </div>
     );

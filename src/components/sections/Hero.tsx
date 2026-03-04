@@ -3,8 +3,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect } from 'react';
 
 const images = [
-    '/images/tanker-aerial.jpg',
-    '/images/herosection.jpg'
+    '/images/herosection.jpg',
+    '/images/2.jpg',
+    '/images/3.jpg'
 ];
 
 export default function Hero() {
@@ -18,7 +19,7 @@ export default function Hero() {
     }, []);
 
     return (
-        <section className="relative h-screen flex items-center bg-brand-navy overflow-hidden">
+        <section className="relative h-screen flex items-center bg-brand-navy overflow-hidden pt-20 md:pt-24">
             {/* Background Images Slider */}
             <div className="absolute inset-0 z-0">
                 <AnimatePresence mode="wait">

@@ -1,29 +1,17 @@
 'use client';
 import { motion } from 'framer-motion';
 import { Phone, MapPin, Globe, ExternalLink } from 'lucide-react';
-
-const locations = [
-    {
-        city: 'Lagos',
-        address: 'Plot 15, Admiralty Way, Lekki Phase 1, Lagos, Nigeria',
-        phone: '+234 (0) 803 000 0000',
-        type: 'Operational Headquarters'
-    },
-    {
-        city: 'London',
-        address: '71-75 Shelton Street, Covent Garden, London, WC2H 9JQ, UK',
-        phone: '+44 (0) 20 7000 0000',
-        type: 'International Trading Office'
-    },
-    {
-        city: 'Houston',
-        address: '1200 Smith St, Houston, TX 77002, United States',
-        phone: '+1 (713) 000 0000',
-        type: 'Logistics & Energy Hub'
-    }
-];
+import { useState, useEffect } from 'react';
 
 export default function ContactInfo() {
+    const [locations, setLocations] = useState<any[]>([]);
+
+    useEffect(() => {
+        fetch('/api/content')
+            .then(res => res.json())
+            .then(data => setLocations(data.locations || []));
+    }, []);
+
     return (
         <section id="contact-info" className="bg-brand-white py-24 border-t border-gray-100">
             <div className="max-w-7xl mx-auto px-6">
