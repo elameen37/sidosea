@@ -34,7 +34,7 @@ export default function Hero() {
     }, []);
 
     return (
-        <section ref={containerRef} className="relative min-h-screen flex items-center bg-brand-navy overflow-hidden pt-32 pb-40 md:pt-24 md:pb-0">
+        <section ref={containerRef} className="relative min-h-[120vh] md:min-h-screen flex items-center bg-brand-navy overflow-hidden pt-32 pb-64 md:pt-24 md:pb-24">
             {/* Background Images Slider */}
             <div className="absolute inset-0 z-0 overflow-hidden">
                 <AnimatePresence mode="wait">
@@ -50,6 +50,7 @@ export default function Hero() {
                             className="absolute inset-0 bg-cover bg-center"
                             style={{
                                 y,
+                                scale: 1.1,
                                 backgroundImage: `url(${images[index]})`
                             }}
                         />
