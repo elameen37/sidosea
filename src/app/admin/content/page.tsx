@@ -50,7 +50,7 @@ export default function ContentEditor() {
                             <input
                                 value={content.homepage.headline}
                                 onChange={e => setContent({ ...content, homepage: { ...content.homepage, headline: e.target.value } })}
-                                className="w-full bg-gray-50 border p-3 text-sm mt-1 outline-none focus:border-brand-orange"
+                                className="w-full bg-gray-50 border p-3 text-sm mt-1 outline-none focus:border-brand-orange text-brand-navy"
                             />
                         </div>
                         <div>
@@ -58,7 +58,37 @@ export default function ContentEditor() {
                             <textarea
                                 value={content.homepage.subheadline}
                                 onChange={e => setContent({ ...content, homepage: { ...content.homepage, subheadline: e.target.value } })}
-                                className="w-full bg-gray-50 border p-3 text-sm mt-1 outline-none focus:border-brand-orange h-24"
+                                className="w-full bg-gray-50 border p-3 text-sm mt-1 outline-none focus:border-brand-orange h-24 text-brand-navy"
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                <div className="bg-white p-8 rounded-sm shadow-sm border border-gray-100 space-y-6">
+                    <h3 className="text-sm font-bold uppercase tracking-widest text-brand-orange border-b pb-2">Social Links</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div>
+                            <label className="text-[10px] font-bold uppercase text-gray-400">LinkedIn</label>
+                            <input
+                                value={content.socials?.linkedin || ''}
+                                onChange={e => setContent({ ...content, socials: { ...content.socials, linkedin: e.target.value } })}
+                                className="w-full bg-gray-50 border p-3 text-xs mt-1 outline-none focus:border-brand-orange text-brand-navy"
+                            />
+                        </div>
+                        <div>
+                            <label className="text-[10px] font-bold uppercase text-gray-400">Facebook</label>
+                            <input
+                                value={content.socials?.facebook || ''}
+                                onChange={e => setContent({ ...content, socials: { ...content.socials, facebook: e.target.value } })}
+                                className="w-full bg-gray-50 border p-3 text-xs mt-1 outline-none focus:border-brand-orange text-brand-navy"
+                            />
+                        </div>
+                        <div>
+                            <label className="text-[10px] font-bold uppercase text-gray-400">Instagram</label>
+                            <input
+                                value={content.socials?.instagram || ''}
+                                onChange={e => setContent({ ...content, socials: { ...content.socials, instagram: e.target.value } })}
+                                className="w-full bg-gray-50 border p-3 text-xs mt-1 outline-none focus:border-brand-orange text-brand-navy"
                             />
                         </div>
                     </div>
@@ -69,7 +99,7 @@ export default function ContentEditor() {
                     <textarea
                         value={content.about.content}
                         onChange={e => setContent({ ...content, about: { ...content.about, content: e.target.value } })}
-                        className="w-full bg-gray-50 border p-3 text-sm mt-1 outline-none focus:border-brand-orange h-32"
+                        className="w-full bg-gray-50 border p-3 text-sm mt-1 outline-none focus:border-brand-orange h-32 text-brand-navy"
                     />
                 </div>
 
@@ -87,7 +117,7 @@ export default function ContentEditor() {
                                             newLocs[index].city = e.target.value;
                                             setContent({ ...content, locations: newLocs });
                                         }}
-                                        className="w-full bg-white border p-2 text-xs mt-1 outline-none focus:border-brand-orange"
+                                        className="w-full bg-white border p-2 text-xs mt-1 outline-none focus:border-brand-orange text-brand-navy"
                                     />
                                 </div>
                                 <div>
@@ -99,7 +129,7 @@ export default function ContentEditor() {
                                             newLocs[index].type = e.target.value;
                                             setContent({ ...content, locations: newLocs });
                                         }}
-                                        className="w-full bg-white border p-2 text-xs mt-1 outline-none focus:border-brand-orange"
+                                        className="w-full bg-white border p-2 text-xs mt-1 outline-none focus:border-brand-orange text-brand-navy"
                                     />
                                 </div>
                             </div>
@@ -112,7 +142,7 @@ export default function ContentEditor() {
                                         newLocs[index].address = e.target.value;
                                         setContent({ ...content, locations: newLocs });
                                     }}
-                                    className="w-full bg-white border p-2 text-xs mt-1 outline-none focus:border-brand-orange"
+                                    className="w-full bg-white border p-2 text-xs mt-1 outline-none focus:border-brand-orange text-brand-navy"
                                 />
                             </div>
                             <div>
@@ -124,7 +154,7 @@ export default function ContentEditor() {
                                         newLocs[index].phone = e.target.value;
                                         setContent({ ...content, locations: newLocs });
                                     }}
-                                    className="w-full bg-white border p-2 text-xs mt-1 outline-none focus:border-brand-orange"
+                                    className="w-full bg-white border p-2 text-xs mt-1 outline-none focus:border-brand-orange text-brand-navy"
                                 />
                             </div>
                         </div>

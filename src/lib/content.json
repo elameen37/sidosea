@@ -46,5 +46,10 @@
       "phone": "+1 (713) 000 0000",
       "type": "Logistics & Energy Hub"
     }
-  ]
+  ],
+  "socials": {
+    "linkedin": "https://linkedin.com/company/sidosea",
+    "facebook": "https://facebook.com/sidosea",
+    "instagram": "https://instagram.com/sidosea"
+  }
 }

@@ -1,6 +1,6 @@
-'use client';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useState, useEffect } from 'react';
+import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
+import { useState, useEffect, useRef } from 'react';
+import { Instagram, Facebook, Linkedin } from 'lucide-react';
 
 const images = [
     '/images/herosection.jpg',
@@ -10,6 +10,14 @@ const images = [
 
 export default function Hero() {
     const [index, setIndex] = useState(0);
+    const [socials, setSocials] = useState<any>(null);
+    const containerRef = useRef(null);
+    const { scrollYProgress } = useScroll({
+        target: containerRef,
+        offset: ["start start", "end start"]
+    });
+
+    const y = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
 
     useEffect(() => {
         const timer = setInterval(() => {
@@ -18,27 +26,41 @@ export default function Hero() {
         return () => clearInterval(timer);
     }, []);
 
+    useEffect(() => {
+        fetch('/api/content')
+            .then(res => res.json())
+            .then(data => setSocials(data.socials));
+    }, []);
+
     return (
-        <section className="relative h-screen flex items-center bg-brand-navy overflow-hidden pt-20 md:pt-24">
+        <section ref={containerRef} className="relative h-screen flex items-center bg-brand-navy overflow-hidden pt-20 md:pt-24">
             {/* Background Images Slider */}
-            <div className="absolute inset-0 z-0">
+            <div className="absolute inset-0 z-0 overflow-hidden">
                 <AnimatePresence mode="wait">
                     <motion.div
                         key={index}
-                        initial={{ opacity: 0, x: 20 }}
-                        animate={{ opacity: 0.4, x: 0 }}
-                        exit={{ opacity: 0, x: -20 }}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 0.4 }}
+                        exit={{ opacity: 0 }}
                         transition={{ duration: 1.5, ease: "easeInOut" }}
-                        className="absolute inset-0 bg-cover bg-center"
-                        style={{ backgroundImage: `url(${images[index]})` }}
-                    />
+                        className="absolute inset-0"
+                    >
+                        <motion.div
+                            style={{ y }}
+                            className="absolute inset-0 bg-cover bg-center"
+                            style={{
+                                backgroundImage: `url(${images[index]})`,
+                                transform: `translateY(${y.get()})` // Parallax effect
+                            }}
+                        />
+                    </motion.div>
                 </AnimatePresence>
             </div>
 
             {/* Global Background Overlay for text readability */}
             <div className="absolute inset-0 bg-gradient-to-r from-brand-navy via-brand-navy/60 to-transparent z-10"></div>
 
-            <div className="relative z-20 max-w-7xl mx-auto px-6 w-full py-20 md:py-0">
+            <div className="relative z-20 max-w-7xl mx-auto px-6 w-full py-20 md:py-0 flex flex-col md:flex-row items-center justify-between">
                 <motion.div
                     initial={{ opacity: 0, x: -50 }}
                     animate={{ opacity: 1, x: 0 }}
@@ -58,7 +80,46 @@ export default function Hero() {
                         <a href="/profile.pdf" className="btn-secondary border-white text-white hover:bg-white hover:text-brand-navy text-center py-4 px-8 text-xs font-bold tracking-widest">Download Corporate Profile</a>
                     </div>
                 </motion.div>
+
+                {/* Social Links on Hero */}
+                {socials && (
+                    <motion.div
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.8, delay: 0.5 }}
+                        className="hidden md:flex flex-col gap-8 items-center border-l border-white/10 pl-12"
+                    >
+                        <h4 className="text-[10px] font-bold text-white/30 uppercase tracking-[0.4em] rotate-180 [writing-mode:vertical-lr]">Connect with Us</h4>
+                        <div className="h-20 w-px bg-brand-orange/30" />
+                        <div className="flex flex-col gap-6">
+                            <a href={socials.linkedin} target="_blank" rel="noopener noreferrer" className="text-white/50 hover:text-brand-orange transition-colors">
+                                <Linkedin size={20} />
+                            </a>
+                            <a href={socials.facebook} target="_blank" rel="noopener noreferrer" className="text-white/50 hover:text-brand-orange transition-colors">
+                                <Facebook size={20} />
+                            </a>
+                            <a href={socials.instagram} target="_blank" rel="noopener noreferrer" className="text-white/50 hover:text-brand-orange transition-colors">
+                                <Instagram size={20} />
+                            </a>
+                        </div>
+                    </motion.div>
+                )}
             </div>
+
+            {/* Mobile Socials */}
+            {socials && (
+                <div className="md:hidden absolute bottom-12 left-0 right-0 z-20 flex justify-center gap-8">
+                    <a href={socials.linkedin} className="text-white/50 hover:text-brand-orange transition-colors">
+                        <Linkedin size={18} />
+                    </a>
+                    <a href={socials.facebook} className="text-white/50 hover:text-brand-orange transition-colors">
+                        <Facebook size={18} />
+                    </a>
+                    <a href={socials.instagram} className="text-white/50 hover:text-brand-orange transition-colors">
+                        <Instagram size={18} />
+                    </a>
+                </div>
+            )}
 
             {/* Decorative Accent */}
             <div className="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-brand-navy to-transparent z-20"></div>
