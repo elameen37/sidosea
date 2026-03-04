@@ -68,9 +68,9 @@ export default function Hero() {
                     className="max-w-2xl text-center md:text-left mx-auto md:mx-0"
                 >
                     <span className="text-brand-orange font-bold tracking-[0.2em] uppercase text-[10px] md:text-sm mb-4 block">Institutional Crude Supply</span>
-                    <h1 className="text-4xl md:text-7xl font-bold text-white mb-6 leading-tight uppercase tracking-tight">
+                    <h2 className="text-4xl md:text-7xl font-bold text-white mb-6 leading-tight uppercase tracking-tight">
                         Secure, Compliant Access to Nigerian <span className="text-brand-orange">Bonny Light</span> Crude
-                    </h1>
+                    </h2>
                     <p className="text-lg md:text-xl text-white/70 mb-10 leading-relaxed font-light max-w-lg mx-auto md:mx-0">
                         Verified allocations. Structured lifting. Global delivery. <br className="hidden md:block" />
                         The gateway for institutional buyers to West African energy markets.
