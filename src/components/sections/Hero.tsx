@@ -1,3 +1,4 @@
+'use client';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import { useState, useEffect, useRef } from 'react';
 import { Instagram, Facebook, Linkedin } from 'lucide-react';
@@ -46,11 +47,10 @@ export default function Hero() {
                         className="absolute inset-0"
                     >
                         <motion.div
-                            style={{ y }}
                             className="absolute inset-0 bg-cover bg-center"
                             style={{
-                                backgroundImage: `url(${images[index]})`,
-                                transform: `translateY(${y.get()})` // Parallax effect
+                                y,
+                                backgroundImage: `url(${images[index]})`
                             }}
                         />
                     </motion.div>
