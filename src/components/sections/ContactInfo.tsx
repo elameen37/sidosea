@@ -44,7 +44,7 @@ export default function ContactInfo() {
                             {locations.map((loc, i) => (
                                 <div
                                     key={i}
-                                    className="group p-6 bg-gray-50 border border-gray-100 hover:border-brand-orange/30 transition-all shadow-sm"
+                                    className="group p-6 bg-gray-50 border border-gray-100 hover:border-brand-orange/30 transition-all shadow-sm rounded-2xl"
                                 >
                                     <div className="flex items-start gap-4">
                                         <div className="w-10 h-10 bg-brand-navy flex items-center justify-center shrink-0 group-hover:bg-brand-orange transition-colors">
@@ -73,7 +73,7 @@ export default function ContactInfo() {
                     {/* Right: Map Embed */}
                     <motion.div
                         style={{ y: yRight }}
-                        className="h-[400px] lg:h-full min-h-[500px] relative bg-gray-100 border border-gray-200 overflow-hidden shadow-2xl"
+                        className="h-[400px] lg:h-full min-h-[500px] relative bg-gray-100 border border-gray-200 overflow-hidden shadow-2xl rounded-2xl"
                     >
                         {/* Overlay Gradient */}
                         <div className="absolute inset-0 bg-gradient-to-t from-brand-navy/20 to-transparent pointer-events-none z-10" />
@@ -91,7 +91,7 @@ export default function ContactInfo() {
                         />
 
                         {/* Float Info */}
-                        <div className="absolute bottom-6 left-6 right-6 z-20 bg-brand-navy p-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+                        <div className="absolute bottom-6 left-6 right-6 z-20 bg-brand-navy p-6 flex flex-col sm:flex-row justify-between items-center gap-4 rounded-xl shadow-xl">
                             <div>
                                 <p className="text-[10px] text-white/50 font-bold uppercase tracking-widest">Main Logistics Terminal</p>
                                 <h4 className="text-white font-bold uppercase tracking-tight text-sm">Port of Lagos / Lekki Hub</h4>

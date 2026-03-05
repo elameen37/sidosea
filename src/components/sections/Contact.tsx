@@ -73,14 +73,14 @@ export default function Contact() {
                             </p>
                             <div className="pt-8 border-t border-white/10">
                                 <p className="text-brand-orange font-bold uppercase tracking-[0.2em] mb-2 text-[10px]">Compliance Requirement</p>
-                                <p className="text-[10px] md:text-xs">All engagement requires a signed NDA and proof of banking capability (LC/SBLC/MT103).</p>
+                                <p className="text-xs md:text-sm text-white/80 font-medium">All engagement requires a signed NDA and proof of banking capability (LC/SBLC/MT103).</p>
                             </div>
                         </div>
                     </motion.div>
 
                     <motion.div
                         style={{ y: yRight }}
-                        className="bg-white p-6 md:p-10 rounded-sm shadow-2xl"
+                        className="bg-white p-6 md:p-10 rounded-2xl shadow-2xl"
                     >
                         {status === 'success' ? (
                             <div className="text-center py-12">
@@ -102,7 +102,7 @@ export default function Contact() {
                                         <input
                                             {...register('companyName')}
                                             placeholder="e.g. Global Refining Corp"
-                                            className="w-full bg-gray-50 border border-gray-200 p-3 text-sm focus:border-brand-orange outline-none transition-colors"
+                                            className="w-full bg-gray-50 border border-gray-200 p-3 text-sm text-brand-navy font-medium focus:border-brand-orange outline-none transition-colors rounded-xl"
                                         />
                                         {errors.companyName && <p className="text-red-500 text-[10px] mt-1 uppercase font-bold">{errors.companyName.message}</p>}
                                     </div>
@@ -111,7 +111,7 @@ export default function Contact() {
                                         <input
                                             {...register('license')}
                                             placeholder="License ID / Registration"
-                                            className="w-full bg-gray-50 border border-gray-200 p-3 text-sm focus:border-brand-orange outline-none transition-colors"
+                                            className="w-full bg-gray-50 border border-gray-200 p-3 text-sm text-brand-navy font-medium focus:border-brand-orange outline-none transition-colors rounded-xl"
                                         />
                                         {errors.license && <p className="text-red-500 text-[10px] mt-1 uppercase font-bold">{errors.license.message}</p>}
                                     </div>
@@ -123,7 +123,7 @@ export default function Contact() {
                                         <input
                                             {...register('annualVolume')}
                                             placeholder="e.g. 12,000,000 Barrels"
-                                            className="w-full bg-gray-50 border border-gray-200 p-3 text-sm focus:border-brand-orange outline-none transition-colors"
+                                            className="w-full bg-gray-50 border border-gray-200 p-3 text-sm text-brand-navy font-medium focus:border-brand-orange outline-none transition-colors rounded-xl"
                                         />
                                         {errors.annualVolume && <p className="text-red-500 text-[10px] mt-1 uppercase font-bold">{errors.annualVolume.message}</p>}
                                     </div>

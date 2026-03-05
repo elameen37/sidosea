@@ -42,7 +42,7 @@ export default function About() {
 
                 <motion.div
                     style={{ y: y2 }}
-                    className="bg-brand-navy p-6 md:p-12 rounded-sm shadow-2xl relative overflow-hidden group"
+                    className="bg-brand-navy p-6 md:p-12 rounded-2xl shadow-2xl relative overflow-hidden group"
                 >
                     {/* Subtle Background Image Overlay */}
                     <div className="absolute inset-0 opacity-10 group-hover:opacity-20 transition-opacity duration-700 pointer-events-none">

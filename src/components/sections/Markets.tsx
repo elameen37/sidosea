@@ -44,7 +44,7 @@ export default function Markets() {
 
                     <motion.div
                         style={{ y: yImage }}
-                        className="relative aspect-video lg:aspect-video bg-brand-navy rounded-sm overflow-hidden group shadow-2xl"
+                        className="relative aspect-video lg:aspect-video bg-brand-navy rounded-2xl overflow-hidden group shadow-2xl"
                     >
                         <img
                             src="/images/marketweserve2.jpg"

@@ -35,7 +35,7 @@ export default function Risk() {
 
                 <motion.div
                     style={{ y: yTable }}
-                    className="hidden md:block overflow-hidden border border-gray-200 rounded-sm bg-white shadow-xl"
+                    className="hidden md:block overflow-hidden border border-gray-200 rounded-2xl bg-white shadow-xl"
                 >
                     <table className="w-full text-left border-collapse">
                         <thead>
@@ -73,7 +73,7 @@ export default function Risk() {
                     {matrix.map((item, i) => (
                         <div
                             key={i}
-                            className="bg-gray-50 p-6 border border-gray-100"
+                            className="bg-gray-50 p-6 border border-gray-100 rounded-2xl shadow-sm"
                         >
                             <div className="flex items-center gap-3 mb-4">
                                 <div className="w-1.5 h-1.5 bg-brand-orange"></div>

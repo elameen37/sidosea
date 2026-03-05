@@ -35,7 +35,7 @@ export default function Lifecycle() {
 
                 <motion.div
                     style={{ y: yGrid }}
-                    className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-px bg-white/10 border border-white/10 shadow-3xl"
+                    className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-px bg-white/10 border border-white/10 shadow-3xl rounded-2xl overflow-hidden"
                 >
                     {steps.map((step, i) => (
                         <div

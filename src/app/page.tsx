@@ -1,9 +1,11 @@
 import Navbar from '@/components/shared/Navbar';
+import MarketTicker from '@/components/shared/MarketTicker';
 import Hero from '@/components/sections/Hero';
 import ValueBlocks from '@/components/sections/ValueBlocks';
 import About from '@/components/sections/About';
 import Lifecycle from '@/components/sections/Lifecycle';
 import Markets from '@/components/sections/Markets';
+import Partners from '@/components/sections/Partners';
 import Risk from '@/components/sections/Risk';
 import Contact from '@/components/sections/Contact';
 import ContactInfo from '@/components/sections/ContactInfo';
@@ -12,11 +14,13 @@ export default function Home() {
     return (
         <main className="min-h-screen bg-brand-white">
             <Navbar />
+            <MarketTicker />
             <Hero />
             <ValueBlocks />
             <About />
             <Lifecycle />
             <Markets />
+            <Partners />
             <Risk />
             <Contact />
             <ContactInfo />
