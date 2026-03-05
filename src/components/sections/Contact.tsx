@@ -147,7 +147,7 @@ export default function Contact() {
                                     <input
                                         {...register('deliveryRegion')}
                                         placeholder="e.g. Rotterdam, ARA, Houston"
-                                        className="w-full bg-gray-50 border border-gray-200 p-3 text-sm focus:border-brand-orange outline-none transition-colors"
+                                        className="w-full bg-gray-50 border border-gray-200 p-3 text-sm text-brand-navy font-medium focus:border-brand-orange outline-none transition-colors rounded-xl"
                                     />
                                     {errors.deliveryRegion && <p className="text-red-500 text-[10px] mt-1 uppercase font-bold">{errors.deliveryRegion.message}</p>}
                                 </div>
@@ -158,7 +158,7 @@ export default function Contact() {
                                         {...register('corporateEmail')}
                                         type="email"
                                         placeholder="name@company.com"
-                                        className="w-full bg-gray-50 border border-gray-200 p-3 text-sm focus:border-brand-orange outline-none transition-colors"
+                                        className="w-full bg-gray-50 border border-gray-200 p-3 text-sm text-brand-navy font-medium focus:border-brand-orange outline-none transition-colors rounded-xl"
                                     />
                                     {errors.corporateEmail && <p className="text-red-500 text-[10px] mt-1 uppercase font-bold">{errors.corporateEmail.message}</p>}
                                 </div>

@@ -13,7 +13,7 @@ import {
     ChevronLeft,
     ChevronRight
 } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 export default function AdminSidebar() {
     const [isOpen, setIsOpen] = useState(true);
@@ -28,7 +28,16 @@ export default function AdminSidebar() {
 
     return (
         <>
-            {/* Mobile Toggle */}
+            {/* Desktop Toggle Button */}
+            <button
+                onClick={() => setIsOpen(!isOpen)}
+                className="hidden lg:flex fixed left-0 top-1/2 -translate-y-1/2 z-50 bg-brand-navy text-white p-2 rounded-r-lg border border-white/10 shadow-xl hover:bg-brand-orange transition-all duration-300"
+                style={{ left: isOpen ? '256px' : '0' }}
+            >
+                {isOpen ? <ChevronLeft size={20} /> : <ChevronRight size={20} />}
+            </button>
+
+            {/* Mobile Toggle Button */}
             <button
                 onClick={() => setIsOpen(!isOpen)}
                 className="lg:hidden fixed bottom-6 right-6 z-50 bg-brand-navy text-white p-4 rounded-full shadow-2xl border border-white/10"
@@ -36,20 +45,14 @@ export default function AdminSidebar() {
                 {isOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
 
-            {/* Desktop Collapse Toggle */}
-            <button
-                onClick={() => setIsOpen(!isOpen)}
-                className="hidden lg:flex fixed left-0 top-1/2 -translate-y-1/2 z-50 bg-brand-navy text-white p-2 rounded-r-lg border border-white/10 shadow-xl hover:bg-brand-orange transition-colors"
-                style={{ left: isOpen ? '256px' : '0', transition: 'left 0.3s ease-in-out' }}
-            >
-                {isOpen ? <ChevronLeft size={20} /> : <ChevronRight size={20} />}
-            </button>
-
             <motion.aside
                 initial={false}
-                animate={{ width: isOpen ? 256 : 0, opacity: isOpen ? 1 : 0 }}
+                animate={{
+                    width: isOpen ? 256 : 0,
+                    opacity: isOpen ? 1 : 0
+                }}
                 transition={{ duration: 0.3, ease: "easeInOut" }}
-                className="bg-brand-navy text-white flex flex-col shrink-0 overflow-hidden relative"
+                className={`bg-brand-navy text-white flex flex-col shrink-0 overflow-hidden relative z-40 h-screen lg:sticky lg:top-0 ${!isOpen && 'lg:hidden'} lg:flex`}
             >
                 <div className="w-64 flex flex-col h-full">
                     <div className="p-8 border-b border-white/5 flex items-center gap-2">
@@ -65,6 +68,9 @@ export default function AdminSidebar() {
                                 key={item.href}
                                 href={item.href}
                                 className="flex items-center gap-3 p-3 text-white/60 text-sm hover:bg-white/5 rounded-sm transition-colors group"
+                                onClick={() => {
+                                    if (window.innerWidth < 1024) setIsOpen(false);
+                                }}
                             >
                                 <item.icon size={16} className={item.color || "group-hover:text-white"} />
                                 <span className="group-hover:text-white transition-colors">{item.label}</span>
@@ -82,18 +88,13 @@ export default function AdminSidebar() {
                 </div>
             </motion.aside>
 
-            {/* Backdrop for mobile */}
-            <AnimatePresence>
-                {isOpen && (
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        onClick={() => setIsOpen(false)}
-                        className="lg:hidden fixed inset-0 bg-brand-navy/60 backdrop-blur-sm z-40"
-                    />
-                )}
-            </AnimatePresence>
+            {/* Mobile Overlay - Only when open on mobile */}
+            {isOpen && (
+                <div
+                    className="lg:hidden fixed inset-0 bg-transparent z-30"
+                    onClick={() => setIsOpen(false)}
+                />
+            )}
         </>
     );
 }
