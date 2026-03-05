@@ -26,7 +26,7 @@ export default function Navbar() {
                         <div className="w-8 h-8 bg-brand-orange flex items-center justify-center">
                             <span className="text-white font-bold text-xs">S</span>
                         </div>
-                        <span className="text-white font-bold text-lg md:text-xl tracking-tight uppercase">SIDOSEA <span className="font-light">Logistics</span></span>
+                        <span className="text-white font-bold text-base md:text-xl tracking-tight uppercase">SIDOSEA <span className="font-light">Logistics</span></span>
                     </Link>
 
                     {/* Markets Open Indicator (Visible on Desktop & Mobile) */}

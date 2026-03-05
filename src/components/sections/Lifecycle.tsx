@@ -1,9 +1,17 @@
 'use client';
-import { motion } from 'framer-motion';
-import { useState } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { useState, useRef } from 'react';
 
 export default function Lifecycle() {
     const [activeStep, setActiveStep] = useState<number | null>(null);
+    const sectionRef = useRef(null);
+    const { scrollYProgress } = useScroll({
+        target: sectionRef,
+        offset: ["start end", "end start"]
+    });
+
+    const yHeader = useTransform(scrollYProgress, [0, 1], [30, -30]);
+    const yGrid = useTransform(scrollYProgress, [0, 1], [-20, 20]);
 
     const steps = [
         { title: "Allocation Validation", desc: "Rigorous vetting of government-backed crude allocations to ensure supply continuity." },
@@ -15,16 +23,22 @@ export default function Lifecycle() {
     ];
 
     return (
-        <section id="services" className="bg-brand-navy py-16 md:py-24">
+        <section id="services" ref={sectionRef} className="bg-brand-navy py-16 md:py-32 overflow-hidden">
             <div className="max-w-7xl mx-auto px-6">
-                <div className="mb-12 md:mb-16 text-center md:text-left">
+                <motion.div
+                    style={{ y: yHeader }}
+                    className="mb-12 md:mb-16 text-center md:text-left"
+                >
                     <span className="text-brand-orange font-bold tracking-[0.3em] uppercase text-[10px] mb-4 block">Transaction Blueprint</span>
-                    <h2 className="text-3xl md:text-4xl font-bold text-white uppercase tracking-tight">The Lifecycle of a Secure Trade</h2>
-                </div>
+                    <h2 className="text-3xl md:text-5xl font-bold text-white uppercase tracking-tight">The Lifecycle of a Secure Trade</h2>
+                </motion.div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-px bg-white/10 border border-white/10">
+                <motion.div
+                    style={{ y: yGrid }}
+                    className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-px bg-white/10 border border-white/10 shadow-3xl"
+                >
                     {steps.map((step, i) => (
-                        <motion.div
+                        <div
                             key={i}
                             onMouseEnter={() => setActiveStep(i)}
                             onMouseLeave={() => setActiveStep(null)}
@@ -53,9 +67,9 @@ export default function Lifecycle() {
                             <div className="absolute -bottom-10 -right-10 text-[8rem] md:text-[10rem] font-bold text-white/[0.02] pointer-events-none group-hover:text-white/[0.05] transition-all">
                                 {i + 1}
                             </div>
-                        </motion.div>
+                        </div>
                     ))}
-                </div>
+                </motion.div>
             </div>
         </section>
     );

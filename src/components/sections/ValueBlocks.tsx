@@ -1,4 +1,16 @@
+'use client';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { useRef } from 'react';
+
 export default function ValueBlocks() {
+    const sectionRef = useRef(null);
+    const { scrollYProgress } = useScroll({
+        target: sectionRef,
+        offset: ["start end", "end start"]
+    });
+
+    const y = useTransform(scrollYProgress, [0, 1], [-20, 20]);
+
     const blocks = [
         {
             title: "Verified Allocation Access",
@@ -19,9 +31,12 @@ export default function ValueBlocks() {
     ];
 
     return (
-        <section className="bg-white py-16 md:py-24">
+        <section ref={sectionRef} className="bg-white py-16 md:py-32 overflow-hidden">
             <div className="max-w-7xl mx-auto px-6">
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12">
+                <motion.div
+                    style={{ y }}
+                    className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12"
+                >
                     {blocks.map((block, i) => (
                         <div key={i} className="group cursor-default text-center sm:text-left">
                             <div className="w-12 h-1 bg-brand-orange mb-6 group-hover:w-full transition-all duration-500 mx-auto sm:mx-0"></div>
@@ -29,7 +44,7 @@ export default function ValueBlocks() {
                             <p className="text-gray-600 leading-relaxed text-[10px] md:text-sm font-light max-w-xs mx-auto sm:mx-0">{block.desc}</p>
                         </div>
                     ))}
-                </div>
+                </motion.div>
             </div>
         </section>
     );

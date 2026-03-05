@@ -1,10 +1,18 @@
 'use client';
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { Phone, MapPin, Globe, ExternalLink } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 export default function ContactInfo() {
     const [locations, setLocations] = useState<any[]>([]);
+    const sectionRef = useRef(null);
+    const { scrollYProgress } = useScroll({
+        target: sectionRef,
+        offset: ["start end", "end start"]
+    });
+
+    const yLeft = useTransform(scrollYProgress, [0, 1], [40, -40]);
+    const yRight = useTransform(scrollYProgress, [0, 1], [-20, 20]);
 
     useEffect(() => {
         fetch('/api/content')
@@ -13,36 +21,30 @@ export default function ContactInfo() {
     }, []);
 
     return (
-        <section id="contact-info" className="bg-brand-white py-24 border-t border-gray-100">
+        <section id="contact-info" ref={sectionRef} className="bg-brand-white py-24 md:py-32 border-t border-gray-100 overflow-hidden">
             <div className="max-w-7xl mx-auto px-6">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
 
                     {/* Left: Addresses & Contact Details */}
-                    <div className="space-y-12">
+                    <motion.div
+                        style={{ y: yLeft }}
+                        className="space-y-12"
+                    >
                         <div>
-                            <motion.span
-                                initial={{ opacity: 0, x: -20 }}
-                                whileInView={{ opacity: 1, x: 0 }}
-                                className="text-brand-orange text-[10px] font-bold uppercase tracking-[0.3em] mb-4 block"
-                            >
-                                Global Presence
-                            </motion.span>
-                            <h2 className="text-3xl md:text-4xl font-bold text-brand-navy uppercase tracking-tight">
+                            <span className="text-brand-orange text-[10px] font-bold uppercase tracking-[0.3em] mb-4 block">Global Presence</span>
+                            <h2 className="text-3xl md:text-5xl font-bold text-brand-navy uppercase tracking-tight">
                                 Institutional <span className="font-light">Connect</span>
                             </h2>
-                            <p className="text-gray-500 mt-4 max-w-lg leading-relaxed">
+                            <p className="text-gray-500 mt-4 max-w-lg leading-relaxed text-sm md:text-base">
                                 Direct access to our operational hubs and authorized trading desks across major energy markets.
                             </p>
                         </div>
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-8">
                             {locations.map((loc, i) => (
-                                <motion.div
+                                <div
                                     key={i}
-                                    initial={{ opacity: 0, y: 20 }}
-                                    whileInView={{ opacity: 1, y: 0 }}
-                                    transition={{ delay: i * 0.1 }}
-                                    className="group p-6 bg-gray-50 border border-gray-100 hover:border-brand-orange/30 transition-all"
+                                    className="group p-6 bg-gray-50 border border-gray-100 hover:border-brand-orange/30 transition-all shadow-sm"
                                 >
                                     <div className="flex items-start gap-4">
                                         <div className="w-10 h-10 bg-brand-navy flex items-center justify-center shrink-0 group-hover:bg-brand-orange transition-colors">
@@ -63,16 +65,15 @@ export default function ContactInfo() {
                                             </a>
                                         </div>
                                     </div>
-                                </motion.div>
+                                </div>
                             ))}
                         </div>
-                    </div>
+                    </motion.div>
 
                     {/* Right: Map Embed */}
                     <motion.div
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
-                        className="h-[400px] lg:h-full min-h-[500px] relative bg-gray-100 border border-gray-200 overflow-hidden"
+                        style={{ y: yRight }}
+                        className="h-[400px] lg:h-full min-h-[500px] relative bg-gray-100 border border-gray-200 overflow-hidden shadow-2xl"
                     >
                         {/* Overlay Gradient */}
                         <div className="absolute inset-0 bg-gradient-to-t from-brand-navy/20 to-transparent pointer-events-none z-10" />

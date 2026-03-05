@@ -1,7 +1,17 @@
 'use client';
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { useRef } from 'react';
 
 export default function Markets() {
+    const sectionRef = useRef(null);
+    const { scrollYProgress } = useScroll({
+        target: sectionRef,
+        offset: ["start end", "end start"]
+    });
+
+    const yText = useTransform(scrollYProgress, [0, 1], [40, -40]);
+    const yImage = useTransform(scrollYProgress, [0, 1], [-30, 30]);
+
     const regions = [
         { name: "Europe", desc: "High-yield refining hubs for gasoline and distillates." },
         { name: "United States", desc: "Strategic supply for Gulf Coast and East Coast refineries." },
@@ -10,35 +20,32 @@ export default function Markets() {
     ];
 
     return (
-        <section className="bg-white py-16 md:py-24">
+        <section ref={sectionRef} className="bg-white py-16 md:py-32 overflow-hidden">
             <div className="max-w-7xl mx-auto px-6">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-16 items-center">
-                    <div className="text-center lg:text-left">
-                        <motion.span
-                            initial={{ opacity: 0, x: -20 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            className="text-brand-orange font-bold tracking-[0.3em] uppercase text-[10px] mb-4 block"
-                        >
-                            Global Footprint
-                        </motion.span>
-                        <h2 className="text-3xl md:text-4xl font-bold text-brand-navy mb-8 uppercase tracking-tight">Markets Served</h2>
+                    <motion.div
+                        style={{ y: yText }}
+                        className="text-center lg:text-left"
+                    >
+                        <span className="text-brand-orange font-bold tracking-[0.3em] uppercase text-[10px] mb-4 block">Global Footprint</span>
+                        <h2 className="text-3xl md:text-5xl font-bold text-brand-navy mb-8 uppercase tracking-tight">Markets Served</h2>
                         <div className="space-y-6 md:space-y-8 text-left max-w-xl mx-auto lg:mx-0">
                             {regions.map((region, i) => (
-                                <motion.div
+                                <div
                                     key={i}
-                                    initial={{ opacity: 0, x: -20 }}
-                                    whileInView={{ opacity: 1, x: 0 }}
-                                    transition={{ delay: i * 0.1 }}
                                     className="border-l border-gray-200 pl-4 md:pl-6 group"
                                 >
                                     <h3 className="text-brand-navy font-bold text-xs md:text-sm uppercase mb-1 group-hover:text-brand-orange transition-colors tracking-wider">{region.name}</h3>
                                     <p className="text-gray-500 text-[10px] md:text-sm leading-relaxed font-light">{region.desc}</p>
-                                </motion.div>
+                                </div>
                             ))}
                         </div>
-                    </div>
+                    </motion.div>
 
-                    <div className="relative aspect-video lg:aspect-video bg-brand-navy rounded-sm overflow-hidden group">
+                    <motion.div
+                        style={{ y: yImage }}
+                        className="relative aspect-video lg:aspect-video bg-brand-navy rounded-sm overflow-hidden group shadow-2xl"
+                    >
                         <img
                             src="/images/marketweserve2.jpg"
                             alt="Global Refining"
@@ -53,7 +60,7 @@ export default function Markets() {
                                 <p className="text-white font-bold text-[8px] md:text-[10px] uppercase tracking-[0.3em] mt-6 md:mt-8">Institutional Trade Flow</p>
                             </div>
                         </div>
-                    </div>
+                    </motion.div>
                 </div>
             </div>
         </section>

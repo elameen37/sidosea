@@ -1,7 +1,17 @@
 'use client';
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { useRef } from 'react';
 
 export default function About() {
+    const sectionRef = useRef(null);
+    const { scrollYProgress } = useScroll({
+        target: sectionRef,
+        offset: ["start end", "end start"]
+    });
+
+    const y1 = useTransform(scrollYProgress, [0, 1], [50, -50]);
+    const y2 = useTransform(scrollYProgress, [0, 1], [-20, 20]);
+
     const specs = [
         { label: "API Gravity", value: "32–35°" },
         { label: "Sulfur Content", value: "~0.14%" },
@@ -10,16 +20,14 @@ export default function About() {
     ];
 
     return (
-        <section id="about" className="bg-brand-white py-16 md:py-24 border-t border-gray-100">
+        <section id="about" ref={sectionRef} className="bg-brand-white py-16 md:py-32 border-t border-gray-100 overflow-hidden">
             <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-16 items-center">
                 <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
+                    style={{ y: y1 }}
                     className="text-center lg:text-left"
                 >
                     <span className="text-brand-orange font-bold tracking-[0.3em] uppercase text-[10px] mb-4 block">Our Identity</span>
-                    <h2 className="text-3xl md:text-4xl font-bold text-brand-navy mb-8 uppercase leading-tight tracking-tight">
+                    <h2 className="text-3xl md:text-5xl font-bold text-brand-navy mb-8 uppercase leading-tight tracking-tight">
                         A Structured Transaction Facilitator for Global Energy
                     </h2>
                     <div className="space-y-6 text-gray-700 leading-relaxed font-light text-sm md:text-base max-w-xl mx-auto lg:mx-0">
@@ -33,10 +41,8 @@ export default function About() {
                 </motion.div>
 
                 <motion.div
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={{ once: true }}
-                    className="bg-brand-navy p-6 md:p-10 rounded-sm shadow-2xl relative overflow-hidden group"
+                    style={{ y: y2 }}
+                    className="bg-brand-navy p-6 md:p-12 rounded-sm shadow-2xl relative overflow-hidden group"
                 >
                     {/* Subtle Background Image Overlay */}
                     <div className="absolute inset-0 opacity-10 group-hover:opacity-20 transition-opacity duration-700 pointer-events-none">

@@ -1,14 +1,22 @@
 'use client';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { LeadSchema, LeadFormValues } from '@/lib/schemas';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Loader2, CheckCircle, AlertCircle } from 'lucide-react';
 
 export default function Contact() {
     const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
     const [message, setMessage] = useState('');
+    const sectionRef = useRef(null);
+    const { scrollYProgress } = useScroll({
+        target: sectionRef,
+        offset: ["start end", "end start"]
+    });
+
+    const yLeft = useTransform(scrollYProgress, [0, 1], [40, -40]);
+    const yRight = useTransform(scrollYProgress, [0, 1], [-30, 30]);
 
     const {
         register,
@@ -42,15 +50,18 @@ export default function Contact() {
     };
 
     return (
-        <section id="contact" className="bg-brand-navy py-24 relative overflow-hidden">
+        <section id="contact" ref={sectionRef} className="bg-brand-navy py-24 md:py-32 relative overflow-hidden">
             {/* Background Accent */}
             <div className="absolute top-0 right-0 w-1/3 h-full bg-brand-orange/5 -skew-x-12 transform translate-x-1/2"></div>
 
             <div className="max-w-7xl mx-auto px-6 relative z-10 py-12 md:py-0">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-16">
-                    <div className="text-center lg:text-left">
+                    <motion.div
+                        style={{ y: yLeft }}
+                        className="text-center lg:text-left"
+                    >
                         <span className="text-brand-orange font-bold tracking-[0.3em] uppercase text-[10px] mb-4 block">Direct Engagement</span>
-                        <h2 className="text-3xl md:text-4xl font-bold text-white uppercase mb-8 leading-tight tracking-tight">
+                        <h2 className="text-3xl md:text-5xl font-bold text-white uppercase mb-8 leading-tight tracking-tight">
                             Serious Buyers. <br />Structured Transactions.
                         </h2>
                         <div className="space-y-6 text-white/60 text-xs md:text-sm font-light leading-relaxed max-w-md mx-auto lg:mx-0">
@@ -65,11 +76,10 @@ export default function Contact() {
                                 <p className="text-[10px] md:text-xs">All engagement requires a signed NDA and proof of banking capability (LC/SBLC/MT103).</p>
                             </div>
                         </div>
-                    </div>
+                    </motion.div>
 
                     <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
+                        style={{ y: yRight }}
                         className="bg-white p-6 md:p-10 rounded-sm shadow-2xl"
                     >
                         {status === 'success' ? (
