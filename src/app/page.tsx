@@ -14,8 +14,10 @@ export default function Home() {
     return (
         <main className="min-h-screen bg-brand-white">
             <Navbar />
-            <MarketTicker />
             <Hero />
+            <div className="md:hidden">
+                <MarketTicker />
+            </div>
             <ValueBlocks />
             <About />
             <Lifecycle />

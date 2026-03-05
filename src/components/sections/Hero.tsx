@@ -2,6 +2,7 @@
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import { useState, useEffect, useRef } from 'react';
 import { Instagram, Facebook, Linkedin } from 'lucide-react';
+import MarketTicker from '../shared/MarketTicker';
 
 const images = [
     '/images/2.jpg',
@@ -123,6 +124,11 @@ export default function Hero() {
 
             {/* Decorative Accent */}
             <div className="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-brand-navy to-transparent z-20"></div>
+
+            {/* Market Ticker - Repositioned (Desktop only) */}
+            <div className="absolute bottom-0 left-0 right-0 z-30 hidden md:block">
+                <MarketTicker />
+            </div>
         </section>
     );
 }

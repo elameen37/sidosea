@@ -131,7 +131,7 @@ export default function Contact() {
                                         <label className="text-[10px] font-bold uppercase text-gray-400 tracking-widest">Banking Instrument</label>
                                         <select
                                             {...register('bankingInstrument')}
-                                            className="w-full bg-gray-50 border border-gray-200 p-3 text-sm focus:border-brand-orange outline-none transition-colors appearance-none"
+                                            className="w-full bg-gray-50 border border-gray-200 p-3 text-sm text-brand-navy font-medium focus:border-brand-orange outline-none transition-colors appearance-none rounded-xl"
                                         >
                                             <option value="">Select Instrument</option>
                                             <option value="LC">Letter of Credit (LC)</option>

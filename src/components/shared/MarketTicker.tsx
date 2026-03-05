@@ -15,7 +15,7 @@ export default function MarketTicker() {
     const scrollingPrices = [...prices, ...prices, ...prices];
 
     return (
-        <div className="bg-brand-navy/95 backdrop-blur-md border-y border-white/5 py-2 overflow-hidden sticky top-[64px] md:top-[80px] z-40">
+        <div className="bg-brand-navy/95 backdrop-blur-md border-y border-white/5 py-2 overflow-hidden z-40">
             <div className="flex whitespace-nowrap">
                 <motion.div
                     animate={{ x: [0, -1920] }}
