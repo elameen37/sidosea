@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 import { LeadSchema } from '@/lib/schemas';
-import fs from 'fs/promises';
-import path from 'path';
+import { supabase } from '@/lib/supabase';
 
 export async function POST(req: Request) {
     try {
@@ -20,20 +19,6 @@ export async function POST(req: Request) {
 
         const data = result.data;
 
-        // 2. Persist to JSON file
-        const leadsPath = path.join(process.cwd(), 'src/lib/leads.json');
-        let leads = [];
-        try {
-            const content = await fs.readFile(leadsPath, 'utf-8');
-            leads = JSON.parse(content);
-        } catch (e) {
-            // File might not exist or be empty
-        }
-
-        if (!Array.isArray(leads)) {
-            leads = [];
-        }
-
         const newLead = {
             ...data,
             id: Math.random().toString(36).substring(2, 9),
@@ -41,15 +26,16 @@ export async function POST(req: Request) {
             status: 'pending'
         };
 
-        leads.unshift(newLead);
+        const { error: dbError } = await supabase
+            .from('leads')
+            .insert([newLead]);
 
-        try {
-            await fs.writeFile(leadsPath, JSON.stringify(leads, null, 2));
-            console.log('Lead Submission Persisted:', newLead);
-        } catch (writeError) {
-            console.error('Failed to write lead to disk (likely read-only filesystem):', writeError);
-            // Gracefully continue so the user sees a success message even if persistence fails on serverless.
+        if (dbError) {
+            console.error('Supabase Insertion Error:', dbError);
+            throw new Error(`Database error: ${dbError.message}`);
         }
+
+        console.log('Lead Submission Persisted to Supabase:', newLead);
 
         return NextResponse.json({
             success: true,

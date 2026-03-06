@@ -1,13 +1,18 @@
 import { NextResponse } from 'next/server';
-import fs from 'fs/promises';
-import path from 'path';
+import { supabase } from '@/lib/supabase';
 
 export async function GET() {
     try {
-        const leadsPath = path.join(process.cwd(), 'src/lib/leads.json');
-        const content = await fs.readFile(leadsPath, 'utf-8');
-        return NextResponse.json(JSON.parse(content));
+        const { data: leads, error } = await supabase
+            .from('leads')
+            .select('*')
+            .order('timestamp', { ascending: false });
+
+        if (error) throw error;
+
+        return NextResponse.json(leads || []);
     } catch (error) {
+        console.error("Supabase Fetch Error:", error);
         return NextResponse.json([], { status: 200 });
     }
 }
@@ -15,22 +20,17 @@ export async function GET() {
 export async function PATCH(req: Request) {
     try {
         const { id, status } = await req.json();
-        const leadsPath = path.join(process.cwd(), 'src/lib/leads.json');
-        const content = await fs.readFile(leadsPath, 'utf-8');
-        const leads = JSON.parse(content);
 
-        const updatedLeads = leads.map((lead: any) =>
-            lead.id === id ? { ...lead, status } : lead
-        );
+        const { error } = await supabase
+            .from('leads')
+            .update({ status })
+            .eq('id', id);
 
-        try {
-            await fs.writeFile(leadsPath, JSON.stringify(updatedLeads, null, 2));
-        } catch (e) {
-            console.error("Failed to update leads file:", e);
-        }
+        if (error) throw error;
 
         return NextResponse.json({ success: true });
     } catch (error) {
+        console.error("Supabase Update Error:", error);
         return NextResponse.json({ success: false }, { status: 500 });
     }
 }
@@ -38,19 +38,17 @@ export async function PATCH(req: Request) {
 export async function DELETE(req: Request) {
     try {
         const { id } = await req.json();
-        const leadsPath = path.join(process.cwd(), 'src/lib/leads.json');
-        const content = await fs.readFile(leadsPath, 'utf-8');
-        const leads = JSON.parse(content);
 
-        const filteredLeads = leads.filter((lead: any) => lead.id !== id);
-        try {
-            await fs.writeFile(leadsPath, JSON.stringify(filteredLeads, null, 2));
-        } catch (e) {
-            console.error("Failed to delete from leads file:", e);
-        }
+        const { error } = await supabase
+            .from('leads')
+            .delete()
+            .eq('id', id);
+
+        if (error) throw error;
 
         return NextResponse.json({ success: true });
     } catch (error) {
+        console.error("Supabase Delete Error:", error);
         return NextResponse.json({ success: false }, { status: 500 });
     }
 }
