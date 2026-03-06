@@ -1,19 +1,24 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { FileText, Users, ShieldAlert, TrendingUp, Loader2 } from "lucide-react";
+import { FileText, Users, ShieldAlert, TrendingUp, Loader2, RefreshCw } from "lucide-react";
 import Link from 'next/link';
 
 export default function AdminDashboard() {
     const [leads, setLeads] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
+    const fetchLeads = () => {
+        setLoading(true);
         fetch('/api/leads')
             .then(res => res.json())
             .then(data => {
                 setLeads(data);
                 setLoading(false);
             });
+    };
+
+    useEffect(() => {
+        fetchLeads();
     }, []);
 
     const stats = [
@@ -27,9 +32,18 @@ export default function AdminDashboard() {
 
     return (
         <div className="space-y-10">
-            <div>
-                <h1 className="text-2xl font-bold text-brand-navy uppercase tracking-widest">Dashboard Overview</h1>
-                <p className="text-gray-500 text-sm mt-1">Management console for SIDOSEA Logistics.</p>
+            <div className="flex items-center gap-4">
+                <div>
+                    <h1 className="text-2xl font-bold text-brand-navy uppercase tracking-widest">Dashboard Overview</h1>
+                    <p className="text-gray-500 text-sm mt-1">Management console for SIDOSEA Logistics.</p>
+                </div>
+                <button
+                    onClick={fetchLeads}
+                    className="p-2 hover:bg-gray-100 rounded-full transition-colors text-gray-400 hover:text-brand-orange"
+                    title="Refresh Data"
+                >
+                    <RefreshCw size={20} className={loading ? 'animate-spin' : ''} />
+                </button>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">

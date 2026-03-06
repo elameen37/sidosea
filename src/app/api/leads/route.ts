@@ -23,7 +23,11 @@ export async function PATCH(req: Request) {
             lead.id === id ? { ...lead, status } : lead
         );
 
-        await fs.writeFile(leadsPath, JSON.stringify(updatedLeads, null, 2));
+        try {
+            await fs.writeFile(leadsPath, JSON.stringify(updatedLeads, null, 2));
+        } catch (e) {
+            console.error("Failed to update leads file:", e);
+        }
 
         return NextResponse.json({ success: true });
     } catch (error) {
@@ -39,7 +43,11 @@ export async function DELETE(req: Request) {
         const leads = JSON.parse(content);
 
         const filteredLeads = leads.filter((lead: any) => lead.id !== id);
-        await fs.writeFile(leadsPath, JSON.stringify(filteredLeads, null, 2));
+        try {
+            await fs.writeFile(leadsPath, JSON.stringify(filteredLeads, null, 2));
+        } catch (e) {
+            console.error("Failed to delete from leads file:", e);
+        }
 
         return NextResponse.json({ success: true });
     } catch (error) {

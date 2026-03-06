@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
-import { Loader2, Mail, Building2, Calendar, FileCheck, MapPin, Download, FileSpreadsheet, Trash2, CheckCircle, Clock, MoreVertical } from 'lucide-react';
+import { Loader2, Mail, Building2, Calendar, FileCheck, MapPin, Download, FileSpreadsheet, Trash2, CheckCircle, Clock, MoreVertical, RefreshCw } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import SaveDialog from '@/components/shared/SaveDialog';
 
@@ -13,13 +13,18 @@ export default function LeadsAdmin() {
     const [showReportMenu, setShowReportMenu] = useState(false);
     const reportRef = useRef<HTMLDivElement>(null);
 
-    useEffect(() => {
+    const fetchLeads = () => {
+        setLoading(true);
         fetch('/api/leads')
             .then(res => res.json())
             .then(data => {
                 setLeads(data);
                 setLoading(false);
             });
+    };
+
+    useEffect(() => {
+        fetchLeads();
     }, []);
 
     // Close report menu on outside click
@@ -100,9 +105,18 @@ export default function LeadsAdmin() {
             <SaveDialog isOpen={showSaved} onClose={() => setShowSaved(false)} message={savedMessage} />
 
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                <div>
-                    <h1 className="text-2xl font-bold text-brand-navy uppercase tracking-widest">Form Submissions</h1>
-                    <p className="text-gray-500 text-sm mt-1">Review and manage qualified institutional leads.</p>
+                <div className="flex items-center gap-4">
+                    <div>
+                        <h1 className="text-2xl font-bold text-brand-navy uppercase tracking-widest">Form Submissions</h1>
+                        <p className="text-gray-500 text-sm mt-1">Review and manage qualified institutional leads.</p>
+                    </div>
+                    <button
+                        onClick={fetchLeads}
+                        className="p-2 hover:bg-gray-100 rounded-full transition-colors text-gray-400 hover:text-brand-orange"
+                        title="Refresh Submissions"
+                    >
+                        <RefreshCw size={20} className={loading ? 'animate-spin' : ''} />
+                    </button>
                 </div>
 
                 {/* Report Menu */}

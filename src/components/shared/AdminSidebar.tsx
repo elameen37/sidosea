@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import {
     LayoutDashboard,
     FileText,
@@ -11,13 +12,13 @@ import {
     Menu,
     X,
     ChevronLeft,
-    ChevronRight,
-    ClipboardList
+    ChevronRight
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export default function AdminSidebar() {
     const [isOpen, setIsOpen] = useState(true);
+    const pathname = usePathname();
 
     const navItems = [
         { href: "/admin", icon: LayoutDashboard, label: "Dashboard", color: "text-brand-orange" },
@@ -68,13 +69,13 @@ export default function AdminSidebar() {
                             <Link
                                 key={item.href}
                                 href={item.href}
-                                className="flex items-center gap-3 p-3 text-white/60 text-sm hover:bg-white/5 rounded-sm transition-colors group"
+                                className={`flex items-center gap-3 p-3 text-sm rounded-sm transition-colors group ${pathname === item.href ? 'bg-white/10 text-white' : 'text-white/60 hover:bg-white/5'}`}
                                 onClick={() => {
                                     if (window.innerWidth < 1024) setIsOpen(false);
                                 }}
                             >
-                                <item.icon size={16} className={item.color || "group-hover:text-white"} />
-                                <span className="group-hover:text-white transition-colors">{item.label}</span>
+                                <item.icon size={16} className={pathname === item.href ? (item.color || "text-brand-orange") : "group-hover:text-white transition-colors"} />
+                                <span className={pathname === item.href ? "text-white font-bold" : "group-hover:text-white transition-colors"}>{item.label}</span>
                             </Link>
                         ))}
                     </nav>
