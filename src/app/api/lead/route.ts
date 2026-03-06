@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
 import { LeadSchema } from '@/lib/schemas';
+import fs from 'fs/promises';
+import path from 'path';
 
 export async function POST(req: Request) {
     try {
@@ -18,17 +20,27 @@ export async function POST(req: Request) {
 
         const data = result.data;
 
-        // 2. Mock Backend Logic (Rate Limiting, Banking Check)
-        // In a real app, we would:
-        // - Check Upstash/Redis for rate limiting
-        // - Check blacklisted domains/emails
-        // - Persist to DB
-        // - Send email via Resend/SendGrid
+        // 2. Persist to JSON file
+        const leadsPath = path.join(process.cwd(), 'src/lib/leads.json');
+        let leads = [];
+        try {
+            const content = await fs.readFile(leadsPath, 'utf-8');
+            leads = JSON.parse(content);
+        } catch (e) {
+            // File might not exist or be empty
+        }
 
-        console.log('Lead Submission Received:', data);
+        const newLead = {
+            ...data,
+            id: Math.random().toString(36).substring(2, 9),
+            timestamp: new Date().toISOString(),
+            status: 'pending'
+        };
 
-        // Simulate delay for "compliance check"
-        await new Promise(resolve => setTimeout(resolve, 2000));
+        leads.unshift(newLead);
+        await fs.writeFile(leadsPath, JSON.stringify(leads, null, 2));
+
+        console.log('Lead Submission Persisted:', newLead);
 
         return NextResponse.json({
             success: true,

@@ -51,5 +51,43 @@
     "linkedin": "https://linkedin.com/company/sidosea",
     "facebook": "https://facebook.com/sidosea",
     "instagram": "https://instagram.com/sidosea"
-  }
+  },
+  "market_prices": [
+    {
+      "label": "Brent Crude",
+      "value": "$82.45",
+      "change": "+1.2%",
+      "up": true
+    },
+    {
+      "label": "WTI Crude",
+      "value": "$78.12",
+      "change": "+0.8%",
+      "up": true
+    },
+    {
+      "label": "Bonny Light",
+      "value": "$84.90",
+      "change": "-0.3%",
+      "up": false
+    },
+    {
+      "label": "Heating Oil",
+      "value": "$2.65",
+      "change": "+1.5%",
+      "up": true
+    },
+    {
+      "label": "Natural Gas",
+      "value": "$1.82",
+      "change": "-2.1%",
+      "up": false
+    },
+    {
+      "label": "Gas Oil",
+      "value": "$812.25",
+      "change": "+0.4%",
+      "up": true
+    }
+  ]
 }

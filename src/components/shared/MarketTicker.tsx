@@ -1,15 +1,17 @@
 'use client';
 import { motion } from 'framer-motion';
+import { useState, useEffect } from 'react';
 
 export default function MarketTicker() {
-    const prices = [
-        { label: "Brent Crude", value: "$82.45", change: "+1.2%", up: true },
-        { label: "WTI Crude", value: "$78.12", change: "+0.8%", up: true },
-        { label: "Bonny Light", value: "$84.90", change: "-0.3%", up: false },
-        { label: "Heating Oil", value: "$2.65", change: "+1.5%", up: true },
-        { label: "Natural Gas", value: "$1.82", change: "-2.1%", up: false },
-        { label: "Gas Oil", value: "$812.25", change: "+0.4%", up: true }
-    ];
+    const [prices, setPrices] = useState<any[]>([]);
+
+    useEffect(() => {
+        fetch('/api/content')
+            .then(res => res.json())
+            .then(data => setPrices(data.market_prices || []));
+    }, []);
+
+    if (prices.length === 0) return null;
 
     // Duplicate list for infinite scroll
     const scrollingPrices = [...prices, ...prices, ...prices];

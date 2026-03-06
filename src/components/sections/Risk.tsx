@@ -1,8 +1,16 @@
 'use client';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { useRef } from 'react';
+import { useRef, useState, useEffect } from 'react';
 
 export default function Risk() {
+    const [matrix, setMatrix] = useState<any[]>([]);
+
+    useEffect(() => {
+        fetch('/api/content')
+            .then(res => res.json())
+            .then(data => setMatrix(data.risk_matrix || []));
+    }, []);
+
     const sectionRef = useRef(null);
     const { scrollYProgress } = useScroll({
         target: sectionRef,
@@ -11,13 +19,6 @@ export default function Risk() {
 
     const yHeader = useTransform(scrollYProgress, [0, 1], [30, -30]);
     const yTable = useTransform(scrollYProgress, [0, 1], [-20, 20]);
-
-    const matrix = [
-        { risk: "Title Fraud", mitigation: "Strict verification of mandate chain and government allocation letters." },
-        { risk: "Payment Default", mitigation: "Transactions secured via non-transferable, confirmed LC or SBLC structures." },
-        { risk: "Operational Variance", mitigation: "Independent inspection (SGS/Saybolt) at both load and discharge ports." },
-        { risk: "Regulatory Delays", mitigation: "Pre-clearance management with NUPRC and customs synchronization." }
-    ];
 
     return (
         <section id="compliance" ref={sectionRef} className="bg-brand-white py-24 md:py-32 border-y border-gray-100 overflow-hidden">
