@@ -1,12 +1,17 @@
 'use client';
-import { useState, useEffect } from 'react';
-import { Loader2, Mail, Building2, Calendar, FileCheck, MapPin } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { Loader2, Mail, Building2, Calendar, FileCheck, MapPin, Download, FileSpreadsheet, Trash2, CheckCircle, Clock, MoreVertical } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import SaveDialog from '@/components/shared/SaveDialog';
 
 export default function LeadsAdmin() {
     const [leads, setLeads] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [selectedLead, setSelectedLead] = useState<any>(null);
+    const [showSaved, setShowSaved] = useState(false);
+    const [savedMessage, setSavedMessage] = useState('');
+    const [showReportMenu, setShowReportMenu] = useState(false);
+    const reportRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         fetch('/api/leads')
@@ -17,13 +22,151 @@ export default function LeadsAdmin() {
             });
     }, []);
 
+    // Close report menu on outside click
+    useEffect(() => {
+        const handleClick = (e: MouseEvent) => {
+            if (reportRef.current && !reportRef.current.contains(e.target as Node)) {
+                setShowReportMenu(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClick);
+        return () => document.removeEventListener('mousedown', handleClick);
+    }, []);
+
+    const handleMarkReviewed = async (lead: any) => {
+        const newStatus = lead.status === 'reviewed' ? 'pending' : 'reviewed';
+        await fetch('/api/leads', {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id: lead.id, status: newStatus }),
+        });
+        setLeads(leads.map(l => l.id === lead.id ? { ...l, status: newStatus } : l));
+        setSelectedLead({ ...lead, status: newStatus });
+        setSavedMessage(newStatus === 'reviewed' ? 'Lead marked as reviewed.' : 'Lead status reset to pending.');
+        setShowSaved(true);
+    };
+
+    const handleDelete = async (id: string) => {
+        await fetch('/api/leads', {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id }),
+        });
+        setLeads(leads.filter(l => l.id !== id));
+        if (selectedLead?.id === id) setSelectedLead(null);
+        setSavedMessage('Lead deleted successfully.');
+        setShowSaved(true);
+    };
+
+    const downloadCSV = () => {
+        const headers = ['Company', 'License/ID', 'Email', 'Volume', 'Instrument', 'Region', 'Status', 'Date'];
+        const rows = leads.map(l => [
+            l.companyName,
+            l.license,
+            l.corporateEmail,
+            l.annualVolume,
+            l.bankingInstrument,
+            l.deliveryRegion,
+            l.status,
+            new Date(l.timestamp).toLocaleDateString()
+        ]);
+
+        const csv = [headers, ...rows].map(row => row.map((cell: string) => `"${(cell || '').replace(/"/g, '""')}"`).join(',')).join('\n');
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `sidosea-leads-${new Date().toISOString().split('T')[0]}.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
+        setShowReportMenu(false);
+    };
+
+    const downloadJSON = () => {
+        const blob = new Blob([JSON.stringify(leads, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `sidosea-leads-${new Date().toISOString().split('T')[0]}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+        setShowReportMenu(false);
+    };
+
     if (loading) return <div className="flex justify-center p-20"><Loader2 className="animate-spin text-brand-orange" /></div>;
 
     return (
         <div className="space-y-8">
-            <div>
-                <h1 className="text-2xl font-bold text-brand-navy uppercase tracking-widest">Form Submissions</h1>
-                <p className="text-gray-500 text-sm mt-1">Review and manage qualified institutional leads.</p>
+            <SaveDialog isOpen={showSaved} onClose={() => setShowSaved(false)} message={savedMessage} />
+
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div>
+                    <h1 className="text-2xl font-bold text-brand-navy uppercase tracking-widest">Form Submissions</h1>
+                    <p className="text-gray-500 text-sm mt-1">Review and manage qualified institutional leads.</p>
+                </div>
+
+                {/* Report Menu */}
+                <div className="relative" ref={reportRef}>
+                    <button
+                        onClick={() => setShowReportMenu(!showReportMenu)}
+                        className="btn-primary flex items-center gap-2"
+                    >
+                        <Download size={16} /> Export Report
+                    </button>
+
+                    <AnimatePresence>
+                        {showReportMenu && (
+                            <motion.div
+                                initial={{ opacity: 0, y: -10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -10 }}
+                                className="absolute right-0 top-12 bg-white rounded-xl shadow-2xl border border-gray-100 w-56 overflow-hidden z-50"
+                            >
+                                <div className="p-2">
+                                    <button
+                                        onClick={downloadCSV}
+                                        className="w-full flex items-center gap-3 p-3 text-sm hover:bg-gray-50 rounded-lg transition-colors text-brand-navy"
+                                    >
+                                        <FileSpreadsheet size={16} className="text-green-500" />
+                                        <div className="text-left">
+                                            <p className="font-bold text-xs uppercase">CSV Report</p>
+                                            <p className="text-[10px] text-gray-400">Spreadsheet format</p>
+                                        </div>
+                                    </button>
+                                    <button
+                                        onClick={downloadJSON}
+                                        className="w-full flex items-center gap-3 p-3 text-sm hover:bg-gray-50 rounded-lg transition-colors text-brand-navy"
+                                    >
+                                        <FileCheck size={16} className="text-blue-500" />
+                                        <div className="text-left">
+                                            <p className="font-bold text-xs uppercase">JSON Export</p>
+                                            <p className="text-[10px] text-gray-400">Raw data format</p>
+                                        </div>
+                                    </button>
+                                </div>
+                                <div className="border-t border-gray-100 p-3">
+                                    <p className="text-[10px] text-gray-400 text-center">{leads.length} total records</p>
+                                </div>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+                </div>
+            </div>
+
+            {/* Stats Bar */}
+            <div className="grid grid-cols-3 gap-4">
+                <div className="bg-white p-4 rounded-2xl border border-gray-100 text-center">
+                    <p className="text-2xl font-bold text-brand-navy font-mono">{leads.length}</p>
+                    <p className="text-[10px] uppercase tracking-widest text-gray-400 font-bold">Total</p>
+                </div>
+                <div className="bg-white p-4 rounded-2xl border border-gray-100 text-center">
+                    <p className="text-2xl font-bold text-orange-500 font-mono">{leads.filter(l => l.status === 'pending').length}</p>
+                    <p className="text-[10px] uppercase tracking-widest text-gray-400 font-bold">Pending</p>
+                </div>
+                <div className="bg-white p-4 rounded-2xl border border-gray-100 text-center">
+                    <p className="text-2xl font-bold text-green-500 font-mono">{leads.filter(l => l.status === 'reviewed').length}</p>
+                    <p className="text-[10px] uppercase tracking-widest text-gray-400 font-bold">Reviewed</p>
+                </div>
             </div>
 
             <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
@@ -55,8 +198,11 @@ export default function LeadsAdmin() {
                                             </div>
                                         </div>
                                     </div>
-                                    <div className={`text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full ${lead.status === 'pending' ? 'bg-orange-100 text-orange-600' : 'bg-green-100 text-green-600'}`}>
-                                        {lead.status}
+                                    <div className="flex items-center gap-2">
+                                        <div className={`text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full ${lead.status === 'pending' ? 'bg-orange-100 text-orange-600' : 'bg-green-100 text-green-600'}`}>
+                                            {lead.status === 'pending' ? <Clock size={10} className="inline mr-1" /> : <CheckCircle size={10} className="inline mr-1" />}
+                                            {lead.status}
+                                        </div>
                                     </div>
                                 </div>
                             </motion.div>
@@ -93,9 +239,18 @@ export default function LeadsAdmin() {
                                         </div>
                                     </div>
 
-                                    <div className="pt-6">
-                                        <button className="w-full py-4 bg-brand-orange text-white text-xs font-bold uppercase tracking-widest rounded-xl hover:bg-white hover:text-brand-navy transition-all">
-                                            Mark as Reviewed
+                                    <div className="pt-4 space-y-3">
+                                        <button
+                                            onClick={() => handleMarkReviewed(selectedLead)}
+                                            className={`w-full py-4 text-xs font-bold uppercase tracking-widest rounded-xl transition-all ${selectedLead.status === 'reviewed' ? 'bg-white/10 text-white/60 hover:bg-orange-500 hover:text-white' : 'bg-brand-orange text-white hover:bg-white hover:text-brand-navy'}`}
+                                        >
+                                            {selectedLead.status === 'reviewed' ? '↺ Reset to Pending' : '✓ Mark as Reviewed'}
+                                        </button>
+                                        <button
+                                            onClick={() => handleDelete(selectedLead.id)}
+                                            className="w-full py-3 bg-red-500/10 text-red-400 text-xs font-bold uppercase tracking-widest rounded-xl hover:bg-red-500 hover:text-white transition-all flex items-center justify-center gap-2"
+                                        >
+                                            <Trash2 size={14} /> Delete Lead
                                         </button>
                                     </div>
                                 </div>

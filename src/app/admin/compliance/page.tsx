@@ -1,11 +1,13 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { Loader2, Save, ShieldCheck, AlertTriangle, Plus, Trash2 } from 'lucide-react';
+import SaveDialog from '@/components/shared/SaveDialog';
 
 export default function ComplianceAdmin() {
     const [content, setContent] = useState<any>(null);
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
+    const [showSaved, setShowSaved] = useState(false);
 
     useEffect(() => {
         fetch('/api/content')
@@ -23,6 +25,7 @@ export default function ComplianceAdmin() {
             body: JSON.stringify(content),
         });
         setSaving(false);
+        setShowSaved(true);
     };
 
     const addRisk = () => {
@@ -39,6 +42,8 @@ export default function ComplianceAdmin() {
 
     return (
         <div className="space-y-8">
+            <SaveDialog isOpen={showSaved} onClose={() => setShowSaved(false)} message="Risk matrix updated and published to the live site." />
+
             <div className="flex justify-between items-center">
                 <div>
                     <h1 className="text-2xl font-bold text-brand-navy uppercase tracking-widest">Risk & Compliance</h1>
