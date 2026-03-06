@@ -1,11 +1,13 @@
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 
-export async function POST() {
+export async function POST(req: Request) {
     const cookieStore = cookies();
     cookieStore.delete('sidosea_admin_session');
 
-    return NextResponse.redirect(new URL('/admin/login', process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'), {
+    const url = new URL('/admin/login', req.url);
+
+    return NextResponse.redirect(url, {
         status: 302,
     });
 }
