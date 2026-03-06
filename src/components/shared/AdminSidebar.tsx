@@ -23,7 +23,6 @@ export default function AdminSidebar() {
         { href: "/admin", icon: LayoutDashboard, label: "Dashboard", color: "text-brand-orange" },
         { href: "/admin/content", icon: FileText, label: "Content Editor" },
         { href: "/admin/leads", icon: ArrowUpRight, label: "Form Submissions" },
-        { href: "/admin/leads", icon: ClipboardList, label: "Reports" },
         { href: "/admin/compliance", icon: Shield, label: "Risk Matrix" },
         { href: "/admin/markets", icon: Globe, label: "Global Markets" },
     ];

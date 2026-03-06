@@ -101,11 +101,24 @@ export default function ContentEditor() {
 
                 <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 space-y-6">
                     <h3 className="text-sm font-bold uppercase tracking-widest text-brand-orange border-b pb-2">About Content</h3>
-                    <textarea
-                        value={content.about.content}
-                        onChange={e => setContent({ ...content, about: { ...content.about, content: e.target.value } })}
-                        className="w-full bg-gray-50 border p-3 text-sm mt-1 outline-none focus:border-brand-orange h-32 text-brand-navy rounded-xl"
-                    />
+                    <div className="space-y-4">
+                        <div>
+                            <label className="text-[10px] font-bold uppercase text-gray-400">Title</label>
+                            <input
+                                value={content.about.title || ''}
+                                onChange={e => setContent({ ...content, about: { ...content.about, title: e.target.value } })}
+                                className="w-full bg-gray-50 border p-3 text-sm mt-1 outline-none focus:border-brand-orange text-brand-navy rounded-xl"
+                            />
+                        </div>
+                        <div>
+                            <label className="text-[10px] font-bold uppercase text-gray-400">Content</label>
+                            <textarea
+                                value={content.about.content || ''}
+                                onChange={e => setContent({ ...content, about: { ...content.about, content: e.target.value } })}
+                                className="w-full bg-gray-50 border p-3 text-sm mt-1 outline-none focus:border-brand-orange h-32 text-brand-navy rounded-xl"
+                            />
+                        </div>
+                    </div>
                 </div>
 
                 <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 space-y-6">
