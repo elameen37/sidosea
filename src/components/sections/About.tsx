@@ -1,8 +1,9 @@
 'use client';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { useRef } from 'react';
+import { useRef, useState, useEffect } from 'react';
 
 export default function About() {
+    const [aboutContent, setAboutContent] = useState<any>(null);
     const sectionRef = useRef(null);
     const { scrollYProgress } = useScroll({
         target: sectionRef,
@@ -11,6 +12,12 @@ export default function About() {
 
     const y1 = useTransform(scrollYProgress, [0, 1], [50, -50]);
     const y2 = useTransform(scrollYProgress, [0, 1], [-20, 20]);
+
+    useEffect(() => {
+        fetch('/api/content')
+            .then(res => res.json())
+            .then(data => setAboutContent(data.about));
+    }, []);
 
     const specs = [
         { label: "API Gravity", value: "32–35°" },
@@ -28,11 +35,11 @@ export default function About() {
                 >
                     <span className="text-brand-orange font-bold tracking-[0.3em] uppercase text-[10px] mb-4 block">Our Identity</span>
                     <h2 className="text-3xl md:text-5xl font-bold text-brand-navy mb-8 uppercase leading-tight tracking-tight">
-                        A Structured Transaction Facilitator for Global Energy
+                        {aboutContent?.title || 'A Structured Transaction Facilitator for Global Energy'}
                     </h2>
                     <div className="space-y-6 text-gray-700 leading-relaxed font-light text-sm md:text-base max-w-xl mx-auto lg:mx-0">
                         <p>
-                            SIDOSEA Logistics operates as a high-authority crude supply operator, bridging the gap between Nigerian production and international refinery demand. We specialize in the facilitation of Bonny Light Crude Oil (BLCO).
+                            {aboutContent?.content || 'SIDOSEA Logistics operates as a high-authority crude supply operator, bridging the gap between Nigerian production and international refinery demand. We specialize in the facilitation of Bonny Light Crude Oil (BLCO).'}
                         </p>
                         <p>
                             Our operations are compliance-led, ensuring every lifting is backed by verified allocation access and rigorous regulatory adherence. We provide a transparent, institutional-grade gateway for large-scale energy traders.

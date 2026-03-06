@@ -88,7 +88,7 @@ export default function MarketsAdmin() {
                                         newPrices[index].label = e.target.value;
                                         setContent({ ...content, market_prices: newPrices });
                                     }}
-                                    className="w-full bg-transparent font-bold text-brand-navy uppercase text-sm outline-none focus:text-brand-orange"
+                                    className="w-full bg-transparent font-bold text-gray-500 uppercase text-sm outline-none focus:text-brand-orange"
                                 />
                             </div>
 
@@ -102,7 +102,7 @@ export default function MarketsAdmin() {
                                             newPrices[index].value = e.target.value;
                                             setContent({ ...content, market_prices: newPrices });
                                         }}
-                                        className="w-full bg-white border border-gray-100 p-2 rounded-lg text-xs font-mono font-bold outline-none focus:border-brand-orange"
+                                        className="w-full bg-white border border-gray-100 p-2 rounded-lg text-xs font-mono font-bold text-gray-500 outline-none focus:border-brand-orange"
                                     />
                                 </div>
                                 <div>

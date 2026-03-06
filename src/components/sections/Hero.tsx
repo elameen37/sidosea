@@ -12,6 +12,7 @@ const images = [
 export default function Hero() {
     const [index, setIndex] = useState(0);
     const [socials, setSocials] = useState<any>(null);
+    const [homepage, setHomepage] = useState<any>(null);
     const containerRef = useRef(null);
     const { scrollYProgress } = useScroll({
         target: containerRef,
@@ -30,7 +31,10 @@ export default function Hero() {
     useEffect(() => {
         fetch('/api/content')
             .then(res => res.json())
-            .then(data => setSocials(data.socials));
+            .then(data => {
+                setSocials(data.socials);
+                setHomepage(data.homepage);
+            });
     }, []);
 
     return (
@@ -70,10 +74,10 @@ export default function Hero() {
                 >
                     <span className="text-brand-orange font-bold tracking-[0.2em] uppercase text-[10px] md:text-sm mb-4 block">Institutional Crude Supply</span>
                     <h2 className="text-4xl md:text-7xl font-bold text-white mb-6 leading-tight uppercase tracking-tight">
-                        Secure, Compliant Access to Nigerian <span className="text-brand-orange">Bonny Light </span>Crude
+                        {homepage?.headline || 'Secure, Compliant Access to Nigerian'} <span className="text-brand-orange">Bonny Light </span>Crude
                     </h2>
                     <p className="text-lg md:text-xl text-white/70 mb-10 leading-relaxed font-light max-w-lg mx-auto md:mx-0">
-                        Verified allocations. Structured lifting. Global delivery. <br className="hidden md:block" />
+                        {homepage?.subheadline || 'Verified allocations. Structured lifting. Global delivery.'} <br className="hidden md:block" />
                         The gateway for institutional buyers to West African energy markets.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
