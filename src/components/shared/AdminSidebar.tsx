@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
@@ -19,6 +19,24 @@ import { motion } from 'framer-motion';
 export default function AdminSidebar() {
     const [isOpen, setIsOpen] = useState(true);
     const pathname = usePathname();
+    const [pendingCount, setPendingCount] = useState(0);
+
+    useEffect(() => {
+        const fetchPendingCount = () => {
+            fetch('/api/leads')
+                .then(res => res.json())
+                .then(data => {
+                    if (Array.isArray(data)) {
+                        setPendingCount(data.filter((l: any) => l.status === 'pending').length);
+                    }
+                })
+                .catch(err => console.error(err));
+        };
+
+        fetchPendingCount();
+        const interval = setInterval(fetchPendingCount, 30000); // Poll every 30s
+        return () => clearInterval(interval);
+    }, []);
 
     const navItems = [
         { href: "/admin", icon: LayoutDashboard, label: "Dashboard", color: "text-brand-orange" },
@@ -75,7 +93,12 @@ export default function AdminSidebar() {
                                 }}
                             >
                                 <item.icon size={16} className={pathname === item.href ? (item.color || "text-brand-orange") : "group-hover:text-white transition-colors"} />
-                                <span className={pathname === item.href ? "text-white font-bold" : "group-hover:text-white transition-colors"}>{item.label}</span>
+                                <span className={pathname === item.href ? "text-white font-bold flex-1" : "group-hover:text-white transition-colors flex-1"}>{item.label}</span>
+                                {item.href === '/admin/leads' && pendingCount > 0 && (
+                                    <span className="bg-brand-orange text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
+                                        {pendingCount}
+                                    </span>
+                                )}
                             </Link>
                         ))}
                     </nav>
