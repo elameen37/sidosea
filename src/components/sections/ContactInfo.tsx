@@ -48,7 +48,7 @@ export default function ContactInfo() {
                         </div>
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-8">
-                            {locations.map((loc, i) => (
+                            {locations.map((loc: any, i: number) => (
                                 <div
                                     key={i}
                                     className="group p-6 bg-gray-50 border border-gray-100 hover:border-brand-orange/30 transition-all shadow-sm rounded-2xl"
