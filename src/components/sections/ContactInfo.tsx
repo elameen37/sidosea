@@ -4,12 +4,19 @@ import { Phone, MapPin, Globe, ExternalLink } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 
 export default function ContactInfo() {
-    const [locations, setLocations] = useState<any[]>([]);
+    const [content, setContent] = useState<any>(null);
     const sectionRef = useRef(null);
     const { scrollYProgress } = useScroll({
         target: sectionRef,
         offset: ["start end", "end start"]
     });
+
+    const locations = content?.locations || [];
+    const mapInfo = content?.map || {
+        label: "Main Logistics Terminal",
+        name: "Port of Lagos / Lekki Hub",
+        url: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15858.558376483321!2d3.473539824641595!3d6.438996501198424!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x103bf4480e0c8d17%3A0xe6440263f68d6f55!2sLekki%20Phase%201%2C%20Lagos!5e0!3m2!1sen!2sng!4v1709425000000!5m2!1sen!2sng"
+    };
 
     const yLeft = useTransform(scrollYProgress, [0, 1], [40, -40]);
     const yRight = useTransform(scrollYProgress, [0, 1], [-20, 20]);
@@ -17,7 +24,7 @@ export default function ContactInfo() {
     useEffect(() => {
         fetch('/api/content')
             .then(res => res.json())
-            .then(data => setLocations(data.locations || []));
+            .then(data => setContent(data));
     }, []);
 
     return (
@@ -80,7 +87,7 @@ export default function ContactInfo() {
 
                         {/* Map Frame */}
                         <iframe
-                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15858.558376483321!2d3.473539824641595!3d6.438996501198424!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x103bf4480e0c8d17%3A0xe6440263f68d6f55!2sLekki%20Phase%201%2C%20Lagos!5e0!3m2!1sen!2sng!4v1709425000000!5m2!1sen!2sng"
+                            src={mapInfo.url}
                             width="100%"
                             height="100%"
                             style={{ border: 0, filter: 'grayscale(1) contrast(1.2) opacity(0.8)' }}
@@ -93,8 +100,8 @@ export default function ContactInfo() {
                         {/* Float Info */}
                         <div className="absolute bottom-6 left-6 right-6 z-20 bg-brand-navy p-6 flex flex-col sm:flex-row justify-between items-center gap-4 rounded-xl shadow-xl">
                             <div>
-                                <p className="text-[10px] text-white/50 font-bold uppercase tracking-widest">Main Logistics Terminal</p>
-                                <h4 className="text-white font-bold uppercase tracking-tight text-sm">Port of Lagos / Lekki Hub</h4>
+                                <p className="text-[10px] text-white/50 font-bold uppercase tracking-widest">{mapInfo.label}</p>
+                                <h4 className="text-white font-bold uppercase tracking-tight text-sm">{mapInfo.name}</h4>
                             </div>
                             <button className="flex items-center gap-2 text-[10px] bg-brand-orange text-white px-4 py-2 font-bold uppercase tracking-widest hover:bg-white hover:text-brand-navy transition-all">
                                 <ExternalLink size={14} /> Open in Maps

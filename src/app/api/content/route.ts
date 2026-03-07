@@ -1,16 +1,36 @@
 import { NextResponse } from 'next/server';
-import fs from 'fs/promises';
-import path from 'path';
+import { supabase } from '@/lib/supabase';
 
 export async function GET() {
-    const contentPath = path.join(process.cwd(), 'src/lib/content.json');
-    const content = await fs.readFile(contentPath, 'utf-8');
-    return NextResponse.json(JSON.parse(content));
+    try {
+        const { data, error } = await supabase
+            .from('site_content')
+            .select('content')
+            .eq('id', 1)
+            .single();
+
+        if (error) throw error;
+        return NextResponse.json(data.content);
+    } catch (error) {
+        console.error("Supabase Content Fetch Error:", error);
+        return NextResponse.json({}, { status: 500 });
+    }
 }
 
 export async function POST(req: Request) {
-    const body = await req.json();
-    const contentPath = path.join(process.cwd(), 'src/lib/content.json');
-    await fs.writeFile(contentPath, JSON.stringify(body, null, 2));
-    return NextResponse.json({ success: true });
+    try {
+        const body = await req.json();
+
+        const { error } = await supabase
+            .from('site_content')
+            .update({ content: body })
+            .eq('id', 1);
+
+        if (error) throw error;
+
+        return NextResponse.json({ success: true });
+    } catch (error) {
+        console.error("Supabase Content Update Error:", error);
+        return NextResponse.json({ success: false }, { status: 500 });
+    }
 }
