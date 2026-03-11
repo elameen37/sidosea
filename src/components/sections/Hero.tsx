@@ -5,7 +5,6 @@ import { Instagram, Facebook, Linkedin } from 'lucide-react';
 import MarketTicker from '../shared/MarketTicker';
 
 const images = [
-    '/images/2.jpg',
     '/images/3.jpg',
     '/images/tanker-aerial.jpg'
 ];
