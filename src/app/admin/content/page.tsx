@@ -53,7 +53,7 @@ export default function ContentEditor() {
                         <div>
                             <label className="text-[10px] font-bold uppercase text-gray-400">Headline</label>
                             <input
-                                value={content.homepage.headline}
+                                value={content.homepage?.headline || ''}
                                 onChange={e => setContent({ ...content, homepage: { ...content.homepage, headline: e.target.value } })}
                                 className="w-full bg-gray-50 border p-3 text-sm mt-1 outline-none focus:border-brand-orange text-brand-navy rounded-xl"
                             />
@@ -61,7 +61,7 @@ export default function ContentEditor() {
                         <div>
                             <label className="text-[10px] font-bold uppercase text-gray-400">Subheadline</label>
                             <textarea
-                                value={content.homepage.subheadline}
+                                value={content.homepage?.subheadline || ''}
                                 onChange={e => setContent({ ...content, homepage: { ...content.homepage, subheadline: e.target.value } })}
                                 className="w-full bg-gray-50 border p-3 text-sm mt-1 outline-none focus:border-brand-orange h-24 text-brand-navy rounded-xl"
                             />
@@ -105,7 +105,7 @@ export default function ContentEditor() {
                         <div>
                             <label className="text-[10px] font-bold uppercase text-gray-400">Title</label>
                             <input
-                                value={content.about.title || ''}
+                                value={content.about?.title || ''}
                                 onChange={e => setContent({ ...content, about: { ...content.about, title: e.target.value } })}
                                 className="w-full bg-gray-50 border p-3 text-sm mt-1 outline-none focus:border-brand-orange text-brand-navy rounded-xl"
                             />
@@ -113,7 +113,7 @@ export default function ContentEditor() {
                         <div>
                             <label className="text-[10px] font-bold uppercase text-gray-400">Content</label>
                             <textarea
-                                value={content.about.content || ''}
+                                value={content.about?.content || ''}
                                 onChange={e => setContent({ ...content, about: { ...content.about, content: e.target.value } })}
                                 className="w-full bg-gray-50 border p-3 text-sm mt-1 outline-none focus:border-brand-orange h-32 text-brand-navy rounded-xl"
                             />

@@ -70,7 +70,7 @@ export default function MarketsAdmin() {
                 </div>
 
                 <div className="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {content.market_prices.map((item: any, index: number) => (
+                    {(content.market_prices || []).map((item: any, index: number) => (
                         <div key={index} className="p-6 border border-gray-100 rounded-2xl bg-gray-50/30 space-y-4 group relative">
                             <button
                                 onClick={() => removePrice(index)}
