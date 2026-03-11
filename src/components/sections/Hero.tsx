@@ -6,7 +6,8 @@ import MarketTicker from '../shared/MarketTicker';
 
 const images = [
     '/images/2.jpg',
-    '/images/3.jpg'
+    '/images/3.jpg',
+    '/images/tanker-aerial.jpg'
 ];
 
 export default function Hero() {
@@ -84,9 +85,9 @@ export default function Hero() {
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
                         <a href="#contact" className="btn-primary text-center py-4 px-8 text-xs font-bold tracking-widest">Request Supply Discussion</a>
-                        <a 
-                            href={profilePdfUrl || "/profile.pdf"} 
-                            target="_blank" 
+                        <a
+                            href={profilePdfUrl || "/profile.pdf"}
+                            target="_blank"
                             rel="noopener noreferrer"
                             className="btn-secondary border-white text-white hover:bg-white hover:text-brand-navy text-center py-4 px-8 text-xs font-bold tracking-widest"
                         >
