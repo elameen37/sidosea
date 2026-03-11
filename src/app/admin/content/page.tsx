@@ -1,12 +1,14 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { Loader2, Save, Plus, Trash2, MapPin } from 'lucide-react';
+import { Loader2, Save, Plus, Trash2, MapPin, FileUp, Download } from 'lucide-react';
+import { supabase } from '@/lib/supabase';
 import SaveDialog from '@/components/shared/SaveDialog';
 
 export default function ContentEditor() {
     const [content, setContent] = useState<any>(null);
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
+    const [uploading, setUploading] = useState(false);
     const [showSaved, setShowSaved] = useState(false);
 
     useEffect(() => {
@@ -26,6 +28,36 @@ export default function ContentEditor() {
         });
         setSaving(false);
         setShowSaved(true);
+    };
+
+    const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        try {
+            setUploading(true);
+            const fileExt = file.name.split('.').pop();
+            const fileName = `corporate-profile-${Math.random().toString(36).substring(2)}.${fileExt}`;
+            const filePath = `${fileName}`;
+
+            const { data, error } = await supabase.storage
+                .from('assets')
+                .upload(filePath, file);
+
+            if (error) throw error;
+
+            const { data: { publicUrl } } = supabase.storage
+                .from('assets')
+                .getPublicUrl(filePath);
+
+            setContent({ ...content, profile_pdf_url: publicUrl });
+            alert("File successfully uploaded! Don't forget to save changes.");
+        } catch (error: any) {
+            console.error('Upload error:', error);
+            alert('Upload failed: ' + error.message);
+        } finally {
+            setUploading(false);
+        }
     };
 
     if (loading) return <div className="flex justify-center p-20"><Loader2 className="animate-spin text-brand-orange" /></div>;
@@ -97,6 +129,42 @@ export default function ContentEditor() {
                             />
                         </div>
                     </div>
+                </div>
+
+                <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 space-y-6">
+                    <h3 className="text-sm font-bold uppercase tracking-widest text-brand-orange border-b pb-2">Corporate Profile PDF</h3>
+                    <div className="flex flex-col md:flex-row gap-6 items-end">
+                        <div className="flex-1 space-y-2">
+                            <label className="text-[10px] font-bold uppercase text-gray-400">Current PDF URL</label>
+                            <div className="flex items-center gap-3 bg-gray-50 p-3 rounded-xl border border-gray-100">
+                                <Download size={16} className="text-brand-orange" />
+                                <input
+                                    value={content.profile_pdf_url || ''}
+                                    readOnly
+                                    className="bg-transparent text-[11px] text-gray-400 w-full outline-none"
+                                    placeholder="No file uploaded yet"
+                                />
+                            </div>
+                        </div>
+                        <div className="relative">
+                            <input
+                                type="file"
+                                id="pdf-upload"
+                                className="hidden"
+                                accept=".pdf"
+                                onChange={handleFileUpload}
+                                disabled={uploading}
+                            />
+                            <label
+                                htmlFor="pdf-upload"
+                                className={`flex items-center gap-2 px-6 py-3 rounded-xl cursor-pointer font-bold uppercase tracking-widest text-[10px] transition-all ${uploading ? 'bg-gray-200 text-gray-400' : 'bg-brand-navy text-white hover:bg-brand-orange shadow-lg shadow-brand-navy/10'}`}
+                            >
+                                {uploading ? <Loader2 size={16} className="animate-spin" /> : <FileUp size={16} />}
+                                {uploading ? 'Uploading...' : 'Upload New PDF'}
+                            </label>
+                        </div>
+                    </div>
+                    <p className="text-[9px] text-gray-400 font-medium italic">Max size: 5MB. Recommended: Compact PDF for fast loading.</p>
                 </div>
 
                 <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 space-y-6">
