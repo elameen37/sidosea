@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import './globals.css';
 import PageLoader from '@/components/shared/PageLoader';
 import BackToTop from '@/components/shared/BackToTop';
+import ChatAssistant from '@/components/shared/ChatAssistant';
 
 export const metadata: Metadata = {
     metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'),
@@ -97,6 +98,7 @@ export default function RootLayout({
                 <PageLoader />
                 {children}
                 <BackToTop />
+                <ChatAssistant />
             </body>
         </html>
     );
