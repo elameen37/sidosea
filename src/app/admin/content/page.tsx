@@ -9,6 +9,7 @@ export default function ContentEditor() {
     const [saving, setSaving] = useState(false);
     const [uploading, setUploading] = useState(false);
     const [showSaved, setShowSaved] = useState(false);
+    const [showUploadSuccess, setShowUploadSuccess] = useState(false);
 
     useEffect(() => {
         fetch('/api/content')
@@ -49,7 +50,7 @@ export default function ContentEditor() {
             if (!res.ok) throw new Error(data.error || 'Upload failed');
 
             setContent({ ...content, profile_pdf_url: data.publicUrl });
-            alert("File successfully uploaded! Don't forget to save changes.");
+            setShowUploadSuccess(true);
         } catch (error: any) {
             console.error('Upload error:', error);
             alert('Upload failed: ' + error.message);
@@ -63,6 +64,7 @@ export default function ContentEditor() {
     return (
         <div className="space-y-8">
             <SaveDialog isOpen={showSaved} onClose={() => setShowSaved(false)} message="Content changes saved and published to the live site." />
+            <SaveDialog isOpen={showUploadSuccess} onClose={() => setShowUploadSuccess(false)} message="Corporate Profile PDF successfully uploaded to secure storage! Please remember to click 'Save Changes' to publish the new link." />
 
             <div className="flex justify-between items-center">
                 <h1 className="text-2xl font-bold text-brand-navy uppercase tracking-widest">Content Editor</h1>
