@@ -86,7 +86,8 @@ export default function Hero() {
                         <a href="#contact" className="btn-primary text-center py-4 px-8 text-xs font-bold tracking-widest">Request Supply Discussion</a>
                         <a
                             href={profilePdfUrl || "/profile.pdf"}
-                            download="SIDOSEA_Logistics_Corporate_Profile.pdf"
+                            target="_blank"
+                            rel="noopener noreferrer"
                             className="btn-secondary border-white text-white hover:bg-white hover:text-brand-navy text-center py-4 px-8 text-xs font-bold tracking-widest"
                         >
                             Download Corporate Profile
