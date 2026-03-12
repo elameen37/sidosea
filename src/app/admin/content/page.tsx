@@ -1,7 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { Loader2, Save, Plus, Trash2, MapPin, FileUp, Download } from 'lucide-react';
-import { supabase } from '@/lib/supabase';
 import SaveDialog from '@/components/shared/SaveDialog';
 
 export default function ContentEditor() {
@@ -36,21 +35,20 @@ export default function ContentEditor() {
 
         try {
             setUploading(true);
-            const fileExt = file.name.split('.').pop();
-            const fileName = `corporate-profile-${Math.random().toString(36).substring(2)}.${fileExt}`;
-            const filePath = `${fileName}`;
+            
+            const formData = new FormData();
+            formData.append('file', file);
 
-            const { data, error } = await supabase.storage
-                .from('assets')
-                .upload(filePath, file);
+            const res = await fetch('/api/upload', {
+                method: 'POST',
+                body: formData
+            });
 
-            if (error) throw error;
+            const data = await res.json();
 
-            const { data: { publicUrl } } = supabase.storage
-                .from('assets')
-                .getPublicUrl(filePath);
+            if (!res.ok) throw new Error(data.error || 'Upload failed');
 
-            setContent({ ...content, profile_pdf_url: publicUrl });
+            setContent({ ...content, profile_pdf_url: data.publicUrl });
             alert("File successfully uploaded! Don't forget to save changes.");
         } catch (error: any) {
             console.error('Upload error:', error);
