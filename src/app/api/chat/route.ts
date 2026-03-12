@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server';
-import { GoogleGenerativeAI } from '@google/generative-ai';
 
 const SYSTEM_PROMPT = `You are SIDA, the official AI assistant for SIDOSEA Logistics — a premier institutional crude oil trading and logistics company based in Nigeria. You are professional, knowledgeable, and concise.
 
@@ -26,7 +25,6 @@ export async function POST(req: Request) {
     const apiKey = process.env.GEMINI_API_KEY;
 
     if (!apiKey) {
-        console.error('GEMINI_API_KEY is not set');
         return NextResponse.json({ error: 'AI service is not configured.' }, { status: 500 });
     }
 
@@ -37,42 +35,60 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: 'Invalid request format' }, { status: 400 });
         }
 
-        const genAI = new GoogleGenerativeAI(apiKey);
-        const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
-
-        // Build history: inject system prompt as first exchange, then conversation
-        const history = [
+        // Prepare the payload for the Gemini API
+        // We inject the system prompt as the first message
+        const contents = [
             {
-                role: 'user' as const,
-                parts: [{ text: SYSTEM_PROMPT }],
+                role: 'user',
+                parts: [{ text: "Context: " + SYSTEM_PROMPT + "\n\nInitial greeting: Hello, I am SIDA." }]
             },
             {
-                role: 'model' as const,
-                parts: [{ text: 'Understood. I am SIDA, the SIDOSEA Logistics AI Assistant. I am ready to help visitors with information about SIDOSEA\'s services and operations.' }],
+                role: 'model',
+                parts: [{ text: "Understood. I am SIDA, the SIDOSEA Logistics AI Assistant. How can I help you today?" }]
             },
-            // Add conversation history (all messages except the last one)
-            ...messages.slice(0, -1).map((msg: { role: string; content: string }) => ({
-                role: (msg.role === 'assistant' ? 'model' : 'user') as 'model' | 'user',
-                parts: [{ text: msg.content }],
-            })),
+            ...messages.map((msg: { role: string; content: string }) => ({
+                role: msg.role === 'assistant' ? 'model' : 'user',
+                parts: [{ text: msg.content }]
+            }))
         ];
 
-        const chat = model.startChat({ history });
+        // Using raw fetch to v1 API
+        const response = await fetch(
+            `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ contents }),
+            }
+        );
 
-        const lastMessage = messages[messages.length - 1];
-        const result = await chat.sendMessage(lastMessage.content);
-        const response = result.response.text();
+        const data = await response.json();
 
-        return NextResponse.json({ content: response });
+        if (!response.ok) {
+            console.error('Gemini API Error:', data);
+            
+            if (response.status === 429) {
+                return NextResponse.json(
+                    { error: 'SIDA is getting too many requests. Please wait a moment and try again.' },
+                    { status: 429 }
+                );
+            }
+
+            return NextResponse.json(
+                { error: `AI Error: ${data.error?.message || 'Failed to generate response'}` },
+                { status: response.status }
+            );
+        }
+
+        const aiText = data.candidates[0].content.parts[0].text;
+        return NextResponse.json({ content: aiText });
 
     } catch (error: any) {
-        console.error('AI Chat Error:', {
-            message: error.message,
-            status: error.status,
-            details: error.errorDetails,
-        });
+        console.error('Server Integration Error:', error);
         return NextResponse.json(
-            { error: `AI error: ${error.message || 'Unknown error. Please try again.'}` },
+            { error: 'System error. Please try again later.' },
             { status: 500 }
         );
     }
