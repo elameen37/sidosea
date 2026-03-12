@@ -22,11 +22,13 @@ Rules:
 - Keep answers short, clear, and professional. Use bullet points when helpful.`;
 
 export async function POST(req: Request) {
-    const apiKey = process.env.GEMINI_API_KEY;
+    const rawApiKey = process.env.GEMINI_API_KEY;
 
-    if (!apiKey) {
+    if (!rawApiKey) {
         return NextResponse.json({ error: 'AI service is not configured.' }, { status: 500 });
     }
+
+    const apiKey = rawApiKey.trim();
 
     try {
         const { messages } = await req.json();
@@ -35,16 +37,18 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: 'Invalid request format' }, { status: 400 });
         }
 
-        // Prepare the payload for the Gemini API
-        // We inject the system prompt as the first message
+        // Using gemini-2.0-flash which is verified to work with v1 and this API key
+        const apiURL = `https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+        // Prepare the history-based payload
         const contents = [
             {
                 role: 'user',
-                parts: [{ text: "Context: " + SYSTEM_PROMPT + "\n\nInitial greeting: Hello, I am SIDA." }]
+                parts: [{ text: `System Context: ${SYSTEM_PROMPT}\n\nPlease acknowledge your role as SIDA.` }]
             },
             {
                 role: 'model',
-                parts: [{ text: "Understood. I am SIDA, the SIDOSEA Logistics AI Assistant. How can I help you today?" }]
+                parts: [{ text: "Understood. I am SIDA, the official SIDOSEA Logistics AI Assistant. I am ready to assist with information about our crude oil trading, logistics, and compliance operations." }]
             },
             ...messages.map((msg: { role: string; content: string }) => ({
                 role: msg.role === 'assistant' ? 'model' : 'user',
@@ -52,41 +56,30 @@ export async function POST(req: Request) {
             }))
         ];
 
-        // Using raw fetch to v1 API
-        const response = await fetch(
-            `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
-            {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ contents }),
-            }
-        );
+        const response = await fetch(apiURL, {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({ contents }),
+        });
 
         const data = await response.json();
 
         if (!response.ok) {
-            console.error('Gemini API Error:', data);
-            
-            if (response.status === 429) {
-                return NextResponse.json(
-                    { error: 'SIDA is getting too many requests. Please wait a moment and try again.' },
-                    { status: 429 }
-                );
-            }
-
+            console.error('Gemini API Error:', JSON.stringify(data, null, 2));
             return NextResponse.json(
-                { error: `AI Error: ${data.error?.message || 'Failed to generate response'}` },
+                { error: `AI Error: ${data.error?.message || 'The AI service is currently unavailable.'}` },
                 { status: response.status }
             );
         }
 
-        const aiText = data.candidates[0].content.parts[0].text;
+        const aiText = data.candidates?.[0]?.content?.parts?.[0]?.text || "I am sorry, I couldn't generate a response at this time.";
         return NextResponse.json({ content: aiText });
 
     } catch (error: any) {
-        console.error('Server Integration Error:', error);
+        console.error('AI Route Error:', error);
         return NextResponse.json(
             { error: 'System error. Please try again later.' },
             { status: 500 }
