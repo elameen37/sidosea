@@ -18,6 +18,20 @@ export async function POST(req: Request) {
         const bytes = await file.arrayBuffer();
         const buffer = Buffer.from(bytes);
 
+        // Check if bucket exists, if not create it
+        const { data: buckets, error: listError } = await supabase.storage.listBuckets();
+        if (listError) throw listError;
+
+        const bucketExists = buckets.some(b => b.name === 'assets');
+        if (!bucketExists) {
+            const { error: createError } = await supabase.storage.createBucket('assets', {
+                public: true,
+                allowedMimeTypes: ['application/pdf'],
+                fileSizeLimit: 5242880 // 5MB
+            });
+            if (createError) throw createError;
+        }
+
         const { data, error } = await supabase.storage
             .from('assets')
             .upload(filePath, buffer, {
