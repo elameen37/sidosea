@@ -6,6 +6,8 @@ export default function JobApplicationsPage() {
     const [applications, setApplications] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [showDebug, setShowDebug] = useState(false);
+    const [rawResponse, setRawResponse] = useState<any>(null);
 
     const fetchApplications = async () => {
         setLoading(true);
@@ -13,6 +15,7 @@ export default function JobApplicationsPage() {
         try {
             const res = await fetch('/api/applications');
             const data = await res.json();
+            setRawResponse(data);
             
             if (!res.ok) {
                 throw new Error(data.error || 'Failed to fetch applications');
@@ -63,18 +66,33 @@ export default function JobApplicationsPage() {
                     <h2 className="text-xl font-bold text-brand-navy uppercase tracking-tight">Job Applications</h2>
                     <p className="text-sm text-gray-500 mt-1">Review candidates and download CVs</p>
                 </div>
-                <button 
-                    onClick={fetchApplications}
-                    className="flex items-center gap-2 px-4 py-2 bg-gray-50 text-brand-navy rounded-lg border hover:bg-gray-100 transition-colors text-sm font-semibold"
-                >
-                    <RefreshCw size={16} className={loading ? "animate-spin" : ""} />
-                    Refresh
-                </button>
+                <div className="flex gap-2">
+                    <button 
+                        onClick={() => setShowDebug(!showDebug)}
+                        className="px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-gray-400 hover:text-brand-orange transition-colors"
+                    >
+                        {showDebug ? 'Hide Debug' : 'Show Debug'}
+                    </button>
+                    <button 
+                        onClick={fetchApplications}
+                        className="flex items-center gap-2 px-4 py-2 bg-gray-50 text-brand-navy rounded-lg border hover:bg-gray-100 transition-colors text-sm font-semibold"
+                    >
+                        <RefreshCw size={16} className={loading ? "animate-spin" : ""} />
+                        Refresh
+                    </button>
+                </div>
             </div>
 
             {error && (
                 <div className="bg-red-50 border border-red-100 p-4 rounded-xl text-red-600 text-sm">
                     {error}
+                </div>
+            )}
+
+            {showDebug && (
+                <div className="bg-brand-navy text-white p-6 rounded-2xl overflow-auto text-[10px] font-mono max-h-64 border border-white/10 shadow-2xl">
+                    <h4 className="text-brand-orange mb-2 uppercase font-bold tracking-widest">Raw API Response Diagnostics:</h4>
+                    <pre className="whitespace-pre-wrap">{JSON.stringify(rawResponse, null, 2)}</pre>
                 </div>
             )}
 

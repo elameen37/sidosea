@@ -2,27 +2,31 @@ import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
 
 export async function GET() {
+    console.log('--- API GET /api/applications triggered ---');
     try {
-        const { data: applications, error } = await supabase
+        const { data: applications, error, count } = await supabase
             .from('job_applications')
-            .select('*')
+            .select('*', { count: 'exact' })
             .order('created_at', { ascending: false });
 
         if (error) {
-            console.error("Supabase Applications Fetch Error:", error);
-            // If the table doesn't exist yet, return helpful error info
-            if (error.code === '42P01') {
-                return NextResponse.json({ 
-                    error: "Table 'job_applications' not found. Please ensure you have run the SQL setup." 
-                }, { status: 404 });
-            }
-            throw error;
+            console.error("Supabase Applications Fetch Error:", JSON.stringify(error, null, 2));
+            return NextResponse.json({ 
+                error: error.message,
+                code: error.code,
+                hint: error.hint,
+                details: error.details
+            }, { status: 500 });
         }
 
+        console.log(`Successfully fetched ${applications?.length} applications. Count: ${count}`);
         return NextResponse.json(applications || []);
     } catch (error: any) {
         console.error("API Fetch Error:", error);
-        return NextResponse.json({ error: error.message || "Failed to fetch applications" }, { status: 500 });
+        return NextResponse.json({ 
+            error: error.message || "Failed to fetch applications",
+            stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+        }, { status: 500 });
     }
 }
 

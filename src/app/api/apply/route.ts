@@ -29,50 +29,56 @@ export async function POST(req: Request) {
 
         // Validate File Size
         if (file.size > MAX_FILE_SIZE) {
+            console.error(`Validation Error: File size exceeds limit for ${file.name}. Size: ${file.size}`);
             return NextResponse.json({ error: 'File size exceeds 5MB limit.' }, { status: 400 });
         }
 
-        // 1. Upload CV to Supabase Storage - use a dedicated 'cvs' bucket
-        const fileExt = file.name.split('.').pop();
-        const safeName = applicant_name.toLowerCase().replace(/[^a-z0-9]/g, '-');
-        const fileName = `${safeName}-${Date.now()}.${fileExt}`;
-
-        const bytes = await file.arrayBuffer();
-        const buffer = Buffer.from(bytes);
-
+        // 1. Upload CV to Supabase Storage
         // Ensure 'cvs' bucket exists
+        console.log("Checking for 'cvs' bucket...");
         const { data: buckets } = await supabase.storage.listBuckets();
         const bucketExists = buckets?.some(b => b.name === 'cvs');
         if (!bucketExists) {
+            console.log("Creating 'cvs' bucket...");
             const { error: createError } = await supabase.storage.createBucket('cvs', {
                 public: true,
                 allowedMimeTypes: ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
                 fileSizeLimit: 5242880 // 5MB
             });
             if (createError && !createError.message.includes('already exists')) {
-                console.error('Bucket creation error:', createError);
-                throw new Error('Failed to initialize CV storage.');
+                console.error("Bucket creation failed:", createError);
+                return NextResponse.json({ error: "Failed to initialize CV storage" }, { status: 500 });
             }
+            console.log("'cvs' bucket created or already exists.");
         }
 
+        const fileExt = file.name.split('.').pop();
+        // Using a more robust unique file name generation
+        const fileName = `${applicant_name.toLowerCase().replace(/[^a-z0-9]/g, '-')}-${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+        const filePath = `resumes/${fileName}`; // Store in a 'resumes' subfolder within the bucket
+
+        console.log(`Attempting to upload CV to ${filePath}...`);
         const { data: uploadData, error: uploadError } = await supabase.storage
             .from('cvs')
-            .upload(fileName, buffer, {
+            .upload(filePath, file, {
                 contentType: file.type,
-                upsert: false
+                upsert: false // Do not overwrite existing files
             });
 
         if (uploadError) {
-            console.error('CV Upload Error:', uploadError);
-            throw new Error('Failed to upload CV to storage.');
+            console.error("CV Upload Error:", uploadError);
+            return NextResponse.json({ error: "Failed to upload CV to storage." }, { status: 500 });
         }
 
         // Retrieve public URL
         const { data: { publicUrl } } = supabase.storage
             .from('cvs')
-            .getPublicUrl(fileName);
+            .getPublicUrl(filePath);
+        
+        console.log(`CV uploaded successfully. Public URL: ${publicUrl}`);
 
         // 2. Insert Application Record into Database
+        console.log(`Inserting application record for ${applicant_name} into 'job_applications' table...`);
         const { error: dbError } = await supabase
             .from('job_applications')
             .insert([{
@@ -86,11 +92,13 @@ export async function POST(req: Request) {
 
         if (dbError) {
             console.error('Job Application Database Error:', dbError);
-            // Attempt to cleanup file if DB insert fails (optional but good practice)
-            await supabase.storage.from('cvs').remove([fileName]);
-            throw new Error('Failed to record job application.');
+            // Attempt to cleanup file if DB insert fails
+            console.log(`Database insert failed, attempting to remove uploaded file: ${filePath}`);
+            await supabase.storage.from('cvs').remove([filePath]);
+            return NextResponse.json({ error: "Failed to record job application: " + dbError.message }, { status: 500 });
         }
 
+        console.log("Application submitted successfully!");
         return NextResponse.json({ success: true, message: 'Application submitted successfully.' }, { status: 200 });
 
     } catch (error: any) {
