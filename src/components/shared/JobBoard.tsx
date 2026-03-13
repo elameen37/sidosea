@@ -36,6 +36,9 @@ export default function JobBoard({ jobs }: { jobs: any[] }) {
                                         <span className="w-1 h-1 bg-white/30 rounded-full"></span>
                                         <span>{job.type}</span>
                                     </div>
+                                    {job.description && (
+                                        <p className="text-white/40 text-sm font-light mt-3 max-w-xl leading-relaxed">{job.description}</p>
+                                    )}
                                 </div>
                                 <button
                                     onClick={() => handleApply(job.title)}

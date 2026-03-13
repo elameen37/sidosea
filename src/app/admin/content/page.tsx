@@ -337,7 +337,7 @@ export default function ContentEditor() {
                             <button
                                 onClick={() => {
                                     const newJobs = [...(content.career?.jobs || [])];
-                                    newJobs.push({ title: "New Position", location: "Location", type: "Full-time" });
+                                    newJobs.push({ title: "New Position", location: "Location", type: "Full-time", description: "" });
                                     setContent({ ...content, career: { ...content.career, jobs: newJobs } });
                                 }}
                                 className="bg-brand-navy text-white text-[10px] px-3 py-1.5 rounded-lg flex items-center gap-2 hover:bg-brand-orange transition-colors font-bold uppercase tracking-widest"
@@ -394,6 +394,19 @@ export default function ContentEditor() {
                                                 className="w-full bg-white border p-2 text-xs mt-1 outline-none focus:border-brand-orange text-brand-navy rounded-lg"
                                             />
                                         </div>
+                                    </div>
+                                    <div>
+                                        <label className="text-[10px] font-bold uppercase text-gray-400">Job Description</label>
+                                        <textarea
+                                            value={job.description || ''}
+                                            onChange={e => {
+                                                const newJobs = [...content.career.jobs];
+                                                newJobs[index].description = e.target.value;
+                                                setContent({ ...content, career: { ...content.career, jobs: newJobs } });
+                                            }}
+                                            className="w-full bg-white border p-2 text-xs mt-1 outline-none focus:border-brand-orange text-brand-navy rounded-lg h-20 resize-none font-light"
+                                            placeholder="Brief description of the role and responsibilities..."
+                                        />
                                     </div>
                                 </div>
                             ))}

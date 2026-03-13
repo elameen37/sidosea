@@ -32,16 +32,31 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: 'File size exceeds 5MB limit.' }, { status: 400 });
         }
 
-        // 1. Upload CV to Supabase Storage
+        // 1. Upload CV to Supabase Storage - use a dedicated 'cvs' bucket
         const fileExt = file.name.split('.').pop();
         const safeName = applicant_name.toLowerCase().replace(/[^a-z0-9]/g, '-');
-        const fileName = `cvs/${safeName}-${Math.random().toString(36).substring(2, 9)}.${fileExt}`;
+        const fileName = `${safeName}-${Date.now()}.${fileExt}`;
 
         const bytes = await file.arrayBuffer();
         const buffer = Buffer.from(bytes);
 
+        // Ensure 'cvs' bucket exists
+        const { data: buckets } = await supabase.storage.listBuckets();
+        const bucketExists = buckets?.some(b => b.name === 'cvs');
+        if (!bucketExists) {
+            const { error: createError } = await supabase.storage.createBucket('cvs', {
+                public: true,
+                allowedMimeTypes: ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
+                fileSizeLimit: 5242880 // 5MB
+            });
+            if (createError && !createError.message.includes('already exists')) {
+                console.error('Bucket creation error:', createError);
+                throw new Error('Failed to initialize CV storage.');
+            }
+        }
+
         const { data: uploadData, error: uploadError } = await supabase.storage
-            .from('assets')
+            .from('cvs')
             .upload(fileName, buffer, {
                 contentType: file.type,
                 upsert: false
@@ -54,7 +69,7 @@ export async function POST(req: Request) {
 
         // Retrieve public URL
         const { data: { publicUrl } } = supabase.storage
-            .from('assets')
+            .from('cvs')
             .getPublicUrl(fileName);
 
         // 2. Insert Application Record into Database
@@ -72,7 +87,7 @@ export async function POST(req: Request) {
         if (dbError) {
             console.error('Job Application Database Error:', dbError);
             // Attempt to cleanup file if DB insert fails (optional but good practice)
-            await supabase.storage.from('assets').remove([fileName]);
+            await supabase.storage.from('cvs').remove([fileName]);
             throw new Error('Failed to record job application.');
         }
 
