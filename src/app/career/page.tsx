@@ -7,6 +7,8 @@ export const metadata = {
     description: 'Join SIDOSEA Logistics and help shape the future of institutional crude oil trading and logistics in Nigeria.'
 };
 
+export const revalidate = 0;
+
 export default async function CareerPage() {
     const { data } = await supabase.from('site_content').select('content').eq('id', 1).single();
     const careerContent = data?.content?.career || {};
