@@ -1,26 +1,50 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { supabase } from '@/lib/supabase';
-import { DownloadCloud, Mail, Phone, Calendar, RefreshCw, FileText } from 'lucide-react';
+import { DownloadCloud, Mail, Phone, Calendar, RefreshCw, FileText, Trash2 } from 'lucide-react';
 
 export default function JobApplicationsPage() {
     const [applications, setApplications] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
     const fetchApplications = async () => {
         setLoading(true);
+        setError(null);
         try {
-            const { data, error } = await supabase
-                .from('job_applications')
-                .select('*')
-                .order('created_at', { ascending: false });
-
-            if (error) throw error;
+            const res = await fetch('/api/applications');
+            const data = await res.json();
+            
+            if (!res.ok) {
+                throw new Error(data.error || 'Failed to fetch applications');
+            }
+            
             setApplications(data || []);
-        } catch (error) {
+        } catch (error: any) {
             console.error('Error fetching applications:', error);
+            setError(error.message);
         } finally {
             setLoading(false);
+        }
+    };
+
+    const handleDelete = async (id: string) => {
+        if (!confirm('Are you sure you want to delete this application?')) return;
+        
+        try {
+            const res = await fetch('/api/applications', {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id }),
+            });
+
+            if (!res.ok) {
+                const data = await res.json();
+                throw new Error(data.error || 'Failed to delete application');
+            }
+
+            setApplications(applications.filter(app => app.id !== id));
+        } catch (error: any) {
+            alert(error.message);
         }
     };
 
@@ -29,7 +53,6 @@ export default function JobApplicationsPage() {
     }, []);
 
     const handleDownloadCV = (url: string) => {
-        // Open the Supabase storage URL directly which triggers a download or opens in new tab
         window.open(url, '_blank');
     };
 
@@ -48,6 +71,12 @@ export default function JobApplicationsPage() {
                     Refresh
                 </button>
             </div>
+
+            {error && (
+                <div className="bg-red-50 border border-red-100 p-4 rounded-xl text-red-600 text-sm">
+                    {error}
+                </div>
+            )}
 
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
                 {loading ? (
@@ -68,6 +97,7 @@ export default function JobApplicationsPage() {
                                     <th className="p-4 font-bold">Applied Role</th>
                                     <th className="p-4 font-bold">Resume / CV</th>
                                     <th className="p-4 font-bold">Contact Details</th>
+                                    <th className="p-4 font-bold text-center">Actions</th>
                                     <th className="p-4 pr-6 font-bold text-right">Date</th>
                                 </tr>
                             </thead>
@@ -102,10 +132,19 @@ export default function JobApplicationsPage() {
                                                 )}
                                             </div>
                                             {app.description && (
-                                                <div className="mt-2 text-xs text-gray-400 bg-gray-50 p-2 rounded border truncate max-w-[200px]" title={app.description}>
+                                                <div className="mt-2 text-xs text-gray-400 bg-gray-50 p-2 rounded border line-clamp-2 max-w-[250px]" title={app.description}>
                                                     {app.description}
                                                 </div>
                                             )}
+                                        </td>
+                                        <td className="p-4 text-center">
+                                            <button 
+                                                onClick={() => handleDelete(app.id)}
+                                                className="text-gray-300 hover:text-red-500 transition-colors p-2"
+                                                title="Delete Application"
+                                            >
+                                                <Trash2 size={16} />
+                                            </button>
                                         </td>
                                         <td className="p-4 pr-6 text-right text-xs text-gray-400 font-mono whitespace-nowrap">
                                             <div className="flex items-center justify-end gap-1.5">
