@@ -41,11 +41,22 @@ export default function Navbar() {
 
                     {/* Desktop Menu */}
                     <div className="hidden md:flex items-center gap-8 text-white/80 font-medium text-sm tracking-wide uppercase">
-                        <Link href="#about" className="hover:text-brand-orange transition-colors">About</Link>
-                        <Link href="#services" className="hover:text-brand-orange transition-colors">Services</Link>
-                        <Link href="#compliance" className="hover:text-brand-orange transition-colors">Compliance</Link>
-                        <Link href="#contact-info" className="hover:text-brand-orange transition-colors">Global Presence</Link>
-                        <Link href="#contact" className="btn-primary py-2 px-6">Request Supply</Link>
+                        <Link href="/#services" className="hover:text-brand-orange transition-colors">Services</Link>
+                        <Link href="/#compliance" className="hover:text-brand-orange transition-colors">Compliance</Link>
+                        
+                        {/* MORE Dropdown */}
+                        <div className="relative group">
+                            <button className="flex items-center gap-1 hover:text-brand-orange transition-colors uppercase outline-none focus:outline-none">
+                                More <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                            </button>
+                            <div className="absolute top-full left-0 mt-6 w-56 bg-brand-navy border border-white/10 shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 flex flex-col pt-2 pb-2 rounded-sm before:absolute before:-top-6 before:left-0 before:w-full before:h-6">
+                                <Link href="/#about" className="px-6 py-4 hover:bg-white/5 hover:text-brand-orange transition-colors">About</Link>
+                                <Link href="/career" className="px-6 py-4 hover:bg-white/5 hover:text-brand-orange transition-colors">Career</Link>
+                                <Link href="/#contact-info" className="px-6 py-4 hover:bg-white/5 hover:text-brand-orange transition-colors">Global Presence</Link>
+                            </div>
+                        </div>
+
+                        <Link href="/#contact" className="btn-primary py-2 px-6">Request Supply</Link>
                     </div>
 
                     {/* Mobile Menu Toggle */}
@@ -84,17 +95,24 @@ export default function Navbar() {
                                 className="md:hidden absolute top-full left-4 right-4 mt-2 bg-brand-navy border border-white/10 shadow-2xl overflow-hidden rounded-sm"
                             >
                                 <div className="p-8 flex flex-col gap-6 text-white/90 font-medium text-sm tracking-[0.2em] uppercase">
-                                    <Link onClick={toggleMenu} href="#about" className="hover:text-brand-orange transition-colors flex items-center justify-between group">
+                                    <Link onClick={toggleMenu} href="/#services" className="hover:text-brand-orange transition-colors flex items-center justify-between group">
+                                        Services <motion.div animate={{ x: [0, 5, 0] }} transition={{ repeat: Infinity, duration: 2 }} className="text-white/20 group-hover:text-brand-orange"> → </motion.div>
+                                    </Link>
+                                    <Link onClick={toggleMenu} href="/#compliance" className="hover:text-brand-orange transition-colors flex items-center justify-between group">
+                                        Compliance <motion.div animate={{ x: [0, 5, 0] }} transition={{ repeat: Infinity, duration: 2, delay: 0.2 }} className="text-white/20 group-hover:text-brand-orange"> → </motion.div>
+                                    </Link>
+                                    
+                                    <div className="-mx-8 h-px bg-white/5 my-2" />
+                                    <span className="text-white/40 text-[10px] tracking-[0.3em]">MORE</span>
+                                    
+                                    <Link onClick={toggleMenu} href="/#about" className="pl-4 hover:text-brand-orange transition-colors flex items-center justify-between group">
                                         About <motion.div animate={{ x: [0, 5, 0] }} transition={{ repeat: Infinity, duration: 2 }} className="text-white/20 group-hover:text-brand-orange"> → </motion.div>
                                     </Link>
-                                    <Link onClick={toggleMenu} href="#services" className="hover:text-brand-orange transition-colors flex items-center justify-between group">
-                                        Services <motion.div animate={{ x: [0, 5, 0] }} transition={{ repeat: Infinity, duration: 2, delay: 0.2 }} className="text-white/20 group-hover:text-brand-orange"> → </motion.div>
+                                    <Link onClick={toggleMenu} href="/career" className="pl-4 hover:text-brand-orange transition-colors flex items-center justify-between group">
+                                        Career <motion.div animate={{ x: [0, 5, 0] }} transition={{ repeat: Infinity, duration: 2, delay: 0.2 }} className="text-white/20 group-hover:text-brand-orange"> → </motion.div>
                                     </Link>
-                                    <Link onClick={toggleMenu} href="#compliance" className="hover:text-brand-orange transition-colors flex items-center justify-between group">
-                                        Compliance <motion.div animate={{ x: [0, 5, 0] }} transition={{ repeat: Infinity, duration: 2, delay: 0.4 }} className="text-white/20 group-hover:text-brand-orange"> → </motion.div>
-                                    </Link>
-                                    <Link onClick={toggleMenu} href="#contact-info" className="hover:text-brand-orange transition-colors flex items-center justify-between group">
-                                        Global Presence <motion.div animate={{ x: [0, 5, 0] }} transition={{ repeat: Infinity, duration: 2, delay: 0.6 }} className="text-white/20 group-hover:text-brand-orange"> → </motion.div>
+                                    <Link onClick={toggleMenu} href="/#contact-info" className="pl-4 hover:text-brand-orange transition-colors flex items-center justify-between group">
+                                        Global Presence <motion.div animate={{ x: [0, 5, 0] }} transition={{ repeat: Infinity, duration: 2, delay: 0.4 }} className="text-white/20 group-hover:text-brand-orange"> → </motion.div>
                                     </Link>
 
                                     <div className="h-px bg-white/10 my-2" />
