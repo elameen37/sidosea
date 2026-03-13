@@ -307,6 +307,102 @@ export default function ContentEditor() {
                         </div>
                     </div>
                 </div>
+
+                <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 space-y-6">
+                    <h3 className="text-sm font-bold uppercase tracking-widest text-brand-orange border-b pb-2">Career Page Content</h3>
+                    <div className="space-y-4">
+                        <div>
+                            <label className="text-[10px] font-bold uppercase text-gray-400">Hero Headline</label>
+                            <input
+                                value={content.career?.hero_headline || ''}
+                                onChange={e => setContent({ ...content, career: { ...content.career, hero_headline: e.target.value } })}
+                                className="w-full bg-gray-50 border p-3 text-sm mt-1 outline-none focus:border-brand-orange text-brand-navy rounded-xl"
+                                placeholder="e.g. Shape the Future of Energy Logistics"
+                            />
+                        </div>
+                        <div>
+                            <label className="text-[10px] font-bold uppercase text-gray-400">Hero Subheadline</label>
+                            <textarea
+                                value={content.career?.hero_subheadline || ''}
+                                onChange={e => setContent({ ...content, career: { ...content.career, hero_subheadline: e.target.value } })}
+                                className="w-full bg-gray-50 border p-3 text-sm mt-1 outline-none focus:border-brand-orange h-24 text-brand-navy rounded-xl"
+                                placeholder="e.g. Join our team of experts..."
+                            />
+                        </div>
+                    </div>
+
+                    <div className="mt-8">
+                        <div className="flex justify-between items-center border-b pb-2 mb-4">
+                            <h4 className="text-xs font-bold uppercase tracking-widest text-brand-navy">Open Positions</h4>
+                            <button
+                                onClick={() => {
+                                    const newJobs = [...(content.career?.jobs || [])];
+                                    newJobs.push({ title: "New Position", location: "Location", type: "Full-time" });
+                                    setContent({ ...content, career: { ...content.career, jobs: newJobs } });
+                                }}
+                                className="bg-brand-navy text-white text-[10px] px-3 py-1.5 rounded-lg flex items-center gap-2 hover:bg-brand-orange transition-colors font-bold uppercase tracking-widest"
+                            >
+                                <Plus size={14} /> Add Job
+                            </button>
+                        </div>
+                        <div className="space-y-4">
+                            {content.career?.jobs && content.career.jobs.map((job: any, index: number) => (
+                                <div key={index} className="p-4 border border-gray-100 bg-gray-50 space-y-4 rounded-xl relative group">
+                                    <button
+                                        onClick={() => {
+                                            const newJobs = content.career.jobs.filter((_: any, i: number) => i !== index);
+                                            setContent({ ...content, career: { ...content.career, jobs: newJobs } });
+                                        }}
+                                        className="absolute top-4 right-4 text-gray-300 hover:text-red-500 transition-colors p-1"
+                                    >
+                                        <Trash2 size={16} />
+                                    </button>
+                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pr-8">
+                                        <div>
+                                            <label className="text-[10px] font-bold uppercase text-gray-400">Job Title</label>
+                                            <input
+                                                value={job.title}
+                                                onChange={e => {
+                                                    const newJobs = [...content.career.jobs];
+                                                    newJobs[index].title = e.target.value;
+                                                    setContent({ ...content, career: { ...content.career, jobs: newJobs } });
+                                                }}
+                                                className="w-full bg-white border p-2 text-xs mt-1 outline-none focus:border-brand-orange text-brand-navy rounded-lg"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="text-[10px] font-bold uppercase text-gray-400">Location</label>
+                                            <input
+                                                value={job.location}
+                                                onChange={e => {
+                                                    const newJobs = [...content.career.jobs];
+                                                    newJobs[index].location = e.target.value;
+                                                    setContent({ ...content, career: { ...content.career, jobs: newJobs } });
+                                                }}
+                                                className="w-full bg-white border p-2 text-xs mt-1 outline-none focus:border-brand-orange text-brand-navy rounded-lg"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="text-[10px] font-bold uppercase text-gray-400">Type</label>
+                                            <input
+                                                value={job.type}
+                                                onChange={e => {
+                                                    const newJobs = [...content.career.jobs];
+                                                    newJobs[index].type = e.target.value;
+                                                    setContent({ ...content, career: { ...content.career, jobs: newJobs } });
+                                                }}
+                                                className="w-full bg-white border p-2 text-xs mt-1 outline-none focus:border-brand-orange text-brand-navy rounded-lg"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                            {(!content.career?.jobs || content.career.jobs.length === 0) && (
+                                <p className="text-sm text-gray-400 italic">No open positions listed.</p>
+                            )}
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     );

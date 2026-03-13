@@ -1,12 +1,20 @@
 import Navbar from '@/components/shared/Navbar';
 import Link from 'next/link';
+import { supabase } from '@/lib/supabase';
 
 export const metadata = {
     title: 'Careers',
     description: 'Join SIDOSEA Logistics and help shape the future of institutional crude oil trading and logistics in Nigeria.'
 };
 
-export default function CareerPage() {
+export default async function CareerPage() {
+    const { data } = await supabase.from('site_content').select('content').eq('id', 1).single();
+    const careerContent = data?.content?.career || {};
+
+    const headline = careerContent.hero_headline || "Shape the Future of Energy Logistics";
+    const subheadline = careerContent.hero_subheadline || "We are a premier institutional crude oil trading and logistics company. Join our team of experts in Lagos, Port Harcourt, and London to build compliant, secure, and structured energy supply chains.";
+    const jobs = careerContent.jobs || [];
+
     return (
         <main className="min-h-screen bg-brand-navy">
             <Navbar />
@@ -18,13 +26,11 @@ export default function CareerPage() {
                 
                 <div className="relative z-10 max-w-7xl mx-auto text-center md:text-left">
                     <span className="text-brand-orange font-bold tracking-[0.2em] uppercase text-[10px] md:text-sm mb-4 block">Careers at SIDOSEA</span>
-                    <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 uppercase tracking-tight">
-                        Shape the Future of <br className="hidden md:block"/>
-                        <span className="text-brand-orange">Energy Logistics</span>
+                    <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 uppercase tracking-tight whitespace-pre-line">
+                        {headline}
                     </h1>
-                    <p className="text-lg text-white/70 max-w-2xl font-light leading-relaxed">
-                        We are a premier institutional crude oil trading and logistics company. 
-                        Join our team of experts in Lagos, Port Harcourt, and London to build compliant, secure, and structured energy supply chains.
+                    <p className="text-lg text-white/70 max-w-2xl font-light leading-relaxed whitespace-pre-line">
+                        {subheadline}
                     </p>
                 </div>
             </section>
@@ -77,35 +83,27 @@ export default function CareerPage() {
                     </div>
 
                     <div className="space-y-4">
-                        {/* Placeholder Job */}
-                        <div className="group bg-white/5 border border-white/10 p-8 flex flex-col md:flex-row items-start md:items-center justify-between hover:bg-white/10 hover:border-brand-orange/50 transition-all cursor-pointer">
-                            <div>
-                                <h3 className="text-xl font-bold text-white uppercase tracking-wide mb-2 group-hover:text-brand-orange transition-colors">Logistics Operations Manager</h3>
-                                <div className="flex items-center gap-4 text-white/50 text-sm font-mono">
-                                    <span>Lagos, Nigeria</span>
-                                    <span className="w-1 h-1 bg-white/30 rounded-full"></span>
-                                    <span>Full-time</span>
+                        {jobs.length > 0 ? (
+                            jobs.map((job: any, index: number) => (
+                                <div key={index} className="group bg-white/5 border border-white/10 p-8 flex flex-col md:flex-row items-start md:items-center justify-between hover:bg-white/10 hover:border-brand-orange/50 transition-all cursor-pointer">
+                                    <div>
+                                        <h3 className="text-xl font-bold text-white uppercase tracking-wide mb-2 group-hover:text-brand-orange transition-colors">{job.title}</h3>
+                                        <div className="flex items-center gap-4 text-white/50 text-sm font-mono">
+                                            <span>{job.location}</span>
+                                            <span className="w-1 h-1 bg-white/30 rounded-full"></span>
+                                            <span>{job.type}</span>
+                                        </div>
+                                    </div>
+                                    <a href="mailto:careers@sidosea.com" className="mt-6 md:mt-0 text-brand-orange text-sm font-bold tracking-[0.2em] uppercase border border-brand-orange px-6 py-3 hover:bg-brand-orange hover:text-brand-navy transition-colors text-center inline-block">
+                                        Apply Now
+                                    </a>
                                 </div>
+                            ))
+                        ) : (
+                            <div className="bg-white/5 border border-white/10 p-12 text-center">
+                                <p className="text-white/50 text-lg font-light">We currently have no open positions. Please check back later.</p>
                             </div>
-                            <button className="mt-6 md:mt-0 text-brand-orange text-sm font-bold tracking-[0.2em] uppercase border border-brand-orange px-6 py-3 hover:bg-brand-orange hover:text-brand-navy transition-colors">
-                                Apply Now
-                            </button>
-                        </div>
-
-                        {/* Placeholder Job */}
-                        <div className="group bg-white/5 border border-white/10 p-8 flex flex-col md:flex-row items-start md:items-center justify-between hover:bg-white/10 hover:border-brand-orange/50 transition-all cursor-pointer">
-                            <div>
-                                <h3 className="text-xl font-bold text-white uppercase tracking-wide mb-2 group-hover:text-brand-orange transition-colors">Compliance Officer</h3>
-                                <div className="flex items-center gap-4 text-white/50 text-sm font-mono">
-                                    <span>London, UK / Remote</span>
-                                    <span className="w-1 h-1 bg-white/30 rounded-full"></span>
-                                    <span>Full-time</span>
-                                </div>
-                            </div>
-                            <button className="mt-6 md:mt-0 text-brand-orange text-sm font-bold tracking-[0.2em] uppercase border border-brand-orange px-6 py-3 hover:bg-brand-orange hover:text-brand-navy transition-colors">
-                                Apply Now
-                            </button>
-                        </div>
+                        )}
                     </div>
                 </div>
             </section>
