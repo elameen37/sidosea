@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Lock, User, Loader2, ShieldCheck, ChevronRight, Globe, Activity } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function LoginPage() {
     const [username, setUsername] = useState('');
