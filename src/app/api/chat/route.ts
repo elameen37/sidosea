@@ -69,6 +69,22 @@ export async function POST(req: Request) {
 
         if (!response.ok) {
             console.error('Gemini API Error:', JSON.stringify(data, null, 2));
+            
+            // Distinguish between different error types for the frontend
+            if (response.status === 429) {
+                return NextResponse.json(
+                    { error: 'AI Quota Limit Reached. Please try again tomorrow or provide a new API key.' },
+                    { status: 429 }
+                );
+            }
+            
+            if (response.status === 403 || response.status === 401) {
+                return NextResponse.json(
+                    { error: 'AI Configuration Error: Invalid API Key.' },
+                    { status: response.status }
+                );
+            }
+
             return NextResponse.json(
                 { error: `AI Error: ${data.error?.message || 'The AI service is currently unavailable.'}` },
                 { status: response.status }

@@ -5,18 +5,20 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 
 export default function AdminDashboard() {
-    const [leads, setLeads] = useState<any[]>([]);
-    const [loading, setLoading] = useState(true);
+    const [diagnostics, setDiagnostics] = useState<any>(null);
 
     const fetchLeads = () => {
         setLoading(true);
-        fetch('/api/leads')
-            .then(res => res.json())
-            .then(data => {
-                setLeads(data);
-                setLoading(false);
-            })
-            .catch(() => setLoading(false));
+        Promise.all([
+            fetch('/api/leads').then(res => res.json()),
+            fetch('/api/admin/diagnostics').then(res => res.json())
+        ])
+        .then(([leadsData, diagData]) => {
+            setLeads(leadsData);
+            setDiagnostics(diagData);
+            setLoading(false);
+        })
+        .catch(() => setLoading(false));
     };
 
     useEffect(() => {
@@ -25,7 +27,7 @@ export default function AdminDashboard() {
 
     const stats = [
         { label: "New Leads", value: leads.length.toString(), icon: Users, color: "from-blue-500 to-indigo-600", trend: "+12%" },
-        { label: "Compliance Pending", value: leads.filter(l => l.status === 'pending').length.toString(), icon: ShieldAlert, color: "from-orange-400 to-brand-orange", trend: "Critical" },
+        { label: "Compliance Pending", value: leads.filter((l: any) => l.status === 'pending').length.toString(), icon: ShieldAlert, color: "from-orange-400 to-brand-orange", trend: "Critical" },
         { label: "Active Allocations", value: "8", icon: TrendingUp, color: "from-emerald-400 to-emerald-600", trend: "+2" },
         { label: "Site Edits", value: "12", icon: FileText, color: "from-purple-500 to-violet-600", trend: "Normal" },
     ];
@@ -87,7 +89,7 @@ export default function AdminDashboard() {
                                 <p className="text-gray-400 text-xs font-bold uppercase tracking-widest">Awaiting new submissions</p>
                             </div>
                         ) : (
-                            leads.slice(0, 5).map((lead, i) => (
+                            leads.slice(0, 5).map((lead: any, i: number) => (
                                 <motion.div 
                                     key={i} 
                                     initial={{ opacity: 0, x: -20 }}
@@ -148,26 +150,51 @@ export default function AdminDashboard() {
 
                     {/* Operational Status Card */}
                     <div className="bg-white p-8 rounded-[2rem] border border-gray-100 shadow-sm">
-                        <div className="flex items-center gap-4 mb-6">
-                            <div className="w-12 h-12 bg-green-500/10 rounded-2xl flex items-center justify-center text-green-600">
+                        <div className="flex items-center gap-4 mb-8">
+                            <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${diagnostics?.ai?.status === 'healthy' && diagnostics?.supabase?.status === 'healthy' ? 'bg-green-500/10 text-green-600' : 'bg-orange-500/10 text-orange-600'}`}>
                                 <Activity size={24} />
                             </div>
                             <div>
-                                <h4 className="text-sm font-black text-brand-navy leading-none">Healthy</h4>
-                                <p className="text-[10px] text-gray-400 font-bold uppercase mt-1">Platform Status</p>
+                                <h4 className="text-sm font-black text-brand-navy leading-none">
+                                    {diagnostics?.ai?.status === 'healthy' && diagnostics?.supabase?.status === 'healthy' ? 'Systems Normal' : 'Action Required'}
+                                </h4>
+                                <p className="text-[10px] text-gray-400 font-bold uppercase mt-1">Platform Integrity</p>
                             </div>
                         </div>
-                        <div className="space-y-3">
-                            <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-tighter">
-                                <span className="text-gray-400">Database connection</span>
-                                <span className="text-green-500 italic">Optimized</span>
+                        
+                        <div className="space-y-6">
+                            {/* AI Service Status */}
+                            <div className="space-y-2">
+                                <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest">
+                                    <span className="text-gray-400">SIDA (AI Services)</span>
+                                    <span className={`italic ${diagnostics?.ai?.status === 'healthy' ? 'text-green-500' : diagnostics?.ai?.status === 'warning' ? 'text-orange-500' : 'text-red-500'}`}>
+                                        {diagnostics?.ai?.message || 'Syncing...'}
+                                    </span>
+                                </div>
+                                <div className="w-full bg-gray-50 h-1.5 rounded-full overflow-hidden">
+                                    <motion.div 
+                                        initial={{ width: 0 }}
+                                        animate={{ width: diagnostics?.ai?.status === 'healthy' ? '100%' : diagnostics?.ai?.status === 'warning' ? '60%' : '10%' }}
+                                        className={`h-full rounded-full ${diagnostics?.ai?.status === 'healthy' ? 'bg-green-500' : diagnostics?.ai?.status === 'warning' ? 'bg-orange-500' : 'bg-red-500'}`}
+                                    />
+                                </div>
                             </div>
-                            <div className="w-full bg-gray-100 h-1.5 rounded-full overflow-hidden">
-                                <motion.div 
-                                    initial={{ width: 0 }}
-                                    animate={{ width: '94%' }}
-                                    className="h-full bg-green-500 rounded-full"
-                                />
+
+                            {/* Database Status */}
+                            <div className="space-y-2">
+                                <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest">
+                                    <span className="text-gray-400">Institutional Database</span>
+                                    <span className={`italic ${diagnostics?.supabase?.status === 'healthy' ? 'text-green-500' : 'text-red-500'}`}>
+                                        {diagnostics?.supabase?.message || 'Syncing...'}
+                                    </span>
+                                </div>
+                                <div className="w-full bg-gray-50 h-1.5 rounded-full overflow-hidden">
+                                    <motion.div 
+                                        initial={{ width: 0 }}
+                                        animate={{ width: diagnostics?.supabase?.status === 'healthy' ? '100%' : '10%' }}
+                                        className={`h-full rounded-full ${diagnostics?.supabase?.status === 'healthy' ? 'bg-green-500' : 'bg-red-500'}`}
+                                    />
+                                </div>
                             </div>
                         </div>
                     </div>
