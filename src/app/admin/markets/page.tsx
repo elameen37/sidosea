@@ -152,7 +152,7 @@ export default function MarketsAdmin() {
                                                 newPrices[index].change = e.target.value;
                                                 setContent({ ...content, market_prices: newPrices });
                                             }}
-                                            className={`w-full bg-transparent border-none p-0 text-sm font-black font-mono focus:ring-0 outline-none ${item.up ? 'text-green-600' : 'text-red-500'}`}
+                                            className={`w-full bg-transparent border-none p-0 text-sm font-black font-mono focus:ring-0 outline-none text-brand-navy`}
                                         />
                                         <button
                                             onClick={() => {

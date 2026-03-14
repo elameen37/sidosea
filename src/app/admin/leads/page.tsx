@@ -98,7 +98,7 @@ export default function LeadsAdmin() {
                             placeholder="Search by company, email or instrument..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full bg-gray-50 border-none rounded-2xl py-3.5 pl-12 pr-4 text-sm font-medium focus:ring-2 focus:ring-brand-orange/20 transition-all"
+                            className="w-full bg-gray-50 border-none rounded-2xl py-3.5 pl-12 pr-4 text-sm font-black text-brand-navy focus:ring-2 focus:ring-brand-orange/20 transition-all"
                         />
                     </div>
                     <button 

@@ -236,7 +236,7 @@ export default function ContentEditor() {
                                                         newLocs[index].city = e.target.value;
                                                         setContent({ ...content, locations: newLocs });
                                                     }}
-                                                    className="w-full bg-gray-50 border-none px-4 py-2.5 text-xs font-bold rounded-xl focus:ring-2 focus:ring-brand-orange/10"
+                                                    className="w-full bg-gray-50 border-none px-4 py-2.5 text-xs font-black text-brand-navy rounded-xl focus:ring-2 focus:ring-brand-orange/10"
                                                 />
                                             </div>
                                             <div className="space-y-1.5">
@@ -248,7 +248,7 @@ export default function ContentEditor() {
                                                         newLocs[index].type = e.target.value;
                                                         setContent({ ...content, locations: newLocs });
                                                     }}
-                                                    className="w-full bg-gray-50 border-none px-4 py-2.5 text-xs font-bold rounded-xl focus:ring-2 focus:ring-brand-orange/10"
+                                                    className="w-full bg-gray-50 border-none px-4 py-2.5 text-xs font-black text-brand-navy rounded-xl focus:ring-2 focus:ring-brand-orange/10"
                                                 />
                                             </div>
                                         </div>
@@ -263,7 +263,7 @@ export default function ContentEditor() {
                                                         newLocs[index].address = e.target.value;
                                                         setContent({ ...content, locations: newLocs });
                                                     }}
-                                                    className="w-full bg-gray-50 border-none px-4 py-3 text-xs font-bold rounded-xl focus:ring-2 focus:ring-brand-orange/10"
+                                                    className="w-full bg-gray-50 border-none px-4 py-3 text-xs font-black text-brand-navy rounded-xl focus:ring-2 focus:ring-brand-orange/10"
                                                 />
                                             </div>
                                             <div className="space-y-1.5">
@@ -275,7 +275,7 @@ export default function ContentEditor() {
                                                         newLocs[index].phone = e.target.value;
                                                         setContent({ ...content, locations: newLocs });
                                                     }}
-                                                    className="w-full bg-gray-50 border-none px-4 py-3 text-xs font-bold rounded-xl focus:ring-2 focus:ring-brand-orange/10"
+                                                    className="w-full bg-gray-50 border-none px-4 py-3 text-xs font-black text-brand-navy rounded-xl focus:ring-2 focus:ring-brand-orange/10"
                                                 />
                                             </div>
                                         </div>

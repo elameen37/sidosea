@@ -43,7 +43,7 @@ export default function AdminLayout({
                             <input 
                                 type="text" 
                                 placeholder="Search everything..." 
-                                className="bg-gray-100/50 border-none rounded-2xl py-2.5 pl-10 pr-4 text-xs font-medium focus:ring-2 focus:ring-brand-orange/20 transition-all w-64"
+                                className="bg-gray-100/50 border-none rounded-2xl py-2.5 pl-10 pr-4 text-xs font-black text-brand-navy focus:ring-2 focus:ring-brand-orange/20 transition-all w-64"
                             />
                         </div>
                         

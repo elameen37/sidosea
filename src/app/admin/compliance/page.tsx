@@ -137,7 +137,7 @@ export default function ComplianceAdmin() {
                                                 setContent({ ...content, risk_matrix: newMatrix });
                                             }}
                                             placeholder="Details on how this risk is mitigated..."
-                                            className="w-full bg-gray-50 border-none p-6 rounded-[1.5rem] text-sm font-medium text-gray-600 focus:ring-2 focus:ring-brand-orange/10 transition-all min-h-[140px] resize-none leading-relaxed"
+                                            className="form-textarea-premium"
                                         />
                                     </div>
                                 </div>
