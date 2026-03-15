@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 
 export default function AdminDashboard() {
+    const [leads, setLeads] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
     const [diagnostics, setDiagnostics] = useState<any>(null);
 
     const fetchLeads = () => {
