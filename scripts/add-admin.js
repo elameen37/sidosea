@@ -32,6 +32,28 @@ if (!supabaseUrl || !supabaseKey) {
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
+// Connectivity Test
+async function checkConnectivity() {
+    try {
+        console.log(`Checking connectivity to: ${supabaseUrl}...`);
+        const res = await fetch(`${supabaseUrl}/rest/v1/job_applications?select=count`, {
+            headers: { 'apikey': supabaseKey }
+        });
+        if (res.ok) {
+            console.log('Connectivity: OK');
+        } else {
+            console.error('Connectivity: FAILED', res.status, res.statusText);
+            const text = await res.text();
+            console.error('Response:', text);
+        }
+    } catch (err) {
+        console.error('Connectivity Test Error:', err.message);
+        if (err.message.includes('fetch failed')) {
+            console.log('\nTIP: This often indicates a network issue or DNS resolution failure. Ensure you have internet access.');
+        }
+    }
+}
+
 // Secure hashing using PBKDF2
 function hashPassword(password) {
     const salt = crypto.randomBytes(16).toString('hex');
@@ -40,6 +62,7 @@ function hashPassword(password) {
 }
 
 async function addAdmin(username, password) {
+    await checkConnectivity();
     console.log(`Adding admin user: ${username}...`);
     
     const hashedPassword = hashPassword(password);
