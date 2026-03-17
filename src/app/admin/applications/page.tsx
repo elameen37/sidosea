@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import SaveDialog from '@/components/shared/SaveDialog';
+import { exportToCSV } from '@/lib/export';
 
 export default function JobApplicationsPage() {
     const [applications, setApplications] = useState<any[]>([]);
@@ -110,6 +111,12 @@ export default function JobApplicationsPage() {
                         className={`p-3.5 rounded-2xl border transition-all ${showDebug ? 'bg-brand-navy text-white' : 'bg-gray-50 text-gray-400 border-transparent hover:border-gray-200'}`}
                     >
                         <Bug size={20} />
+                    </button>
+                    <button 
+                        onClick={() => exportToCSV(applications, 'sidosea_applications_export')}
+                        className="px-6 py-3.5 bg-brand-navy text-white text-[10px] font-black uppercase tracking-widest rounded-2xl hover:bg-brand-orange transition-all shadow-xl shadow-brand-navy/10 flex items-center gap-2"
+                    >
+                        <Download size={16} /> Export
                     </button>
                 </div>
             </div>

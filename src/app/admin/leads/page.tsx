@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import SaveDialog from '@/components/shared/SaveDialog';
+import { exportToCSV } from '@/lib/export';
 
 export default function LeadsAdmin() {
     const [leads, setLeads] = useState<any[]>([]);
@@ -125,7 +126,13 @@ export default function LeadsAdmin() {
                                     className="absolute right-0 top-full mt-4 bg-white rounded-3xl shadow-2xl border border-gray-100 w-64 overflow-hidden z-[100]"
                                 >
                                     <div className="p-3 space-y-1">
-                                        <button className="w-full flex items-center gap-4 p-4 text-left hover:bg-gray-50 rounded-2xl transition-all group">
+                                        <button 
+                                            onClick={() => {
+                                                exportToCSV(leads, 'sidosea_leads_export');
+                                                setShowReportMenu(false);
+                                            }}
+                                            className="w-full flex items-center gap-4 p-4 text-left hover:bg-gray-50 rounded-2xl transition-all group"
+                                        >
                                             <div className="w-10 h-10 bg-green-50 rounded-xl flex items-center justify-center text-green-500 group-hover:scale-110 transition-transform">
                                                 <FileSpreadsheet size={20} />
                                             </div>

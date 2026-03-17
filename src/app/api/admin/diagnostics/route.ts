@@ -16,7 +16,7 @@ export async function GET() {
     const geminiKey = process.env.GEMINI_API_KEY;
     if (!geminiKey) {
         diagnostics.ai.status = 'error';
-        diagnostics.ai.message = 'Missing API Key';
+        diagnostics.ai.message = 'Verify Vercel ENV';
     } else {
         try {
             // Use a very small request to test connectivity

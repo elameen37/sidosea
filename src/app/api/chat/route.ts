@@ -25,7 +25,10 @@ export async function POST(req: Request) {
     const rawApiKey = process.env.GEMINI_API_KEY;
 
     if (!rawApiKey) {
-        return NextResponse.json({ error: 'AI service is not configured.' }, { status: 500 });
+        return NextResponse.json({ 
+            error: 'AI service is not configured. (ENV_MISSING: GEMINI_API_KEY)',
+            instruction: 'Please add GEMINI_API_KEY to your deployment environment variables (e.g., Vercel Dashboard) and redeploy.'
+        }, { status: 500 });
     }
 
     const apiKey = rawApiKey.trim();
