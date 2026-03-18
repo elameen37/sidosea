@@ -49,6 +49,7 @@ export default function AdminSidebar() {
         { href: "/admin/applications", icon: Briefcase, label: "Job Applications" },
         { href: "/admin/compliance", icon: Shield, label: "Risk Matrix" },
         { href: "/admin/markets", icon: Globe, label: "Global Markets" },
+        { href: "/admin/users", icon: Settings, label: "Admin Management" },
     ];
 
     const sidebarVariants = {

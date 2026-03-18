@@ -135,6 +135,7 @@ export default function AdminDashboard() {
                                 <QuickActionLink href="/admin/content" label="Update Content" icon={FileText} />
                                 <QuickActionLink href="/admin/compliance" label="Edit Risk Matrix" icon={ShieldAlert} />
                                 <QuickActionLink href="/admin/markets" label="Market Prices" icon={TrendingUp} />
+                                <QuickActionLink href="/admin/users" label="Admin Management" icon={Users} />
                                 <button className="w-full group flex items-center justify-between p-4 bg-white/5 border border-white/10 rounded-2xl hover:bg-brand-orange transition-all duration-300">
                                     <div className="flex items-center gap-3">
                                         <div className="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center group-hover:bg-white group-hover:text-brand-orange transition-colors">
