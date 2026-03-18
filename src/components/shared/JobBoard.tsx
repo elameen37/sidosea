@@ -5,10 +5,10 @@ import JobApplicationModal from './JobApplicationModal';
 
 export default function JobBoard({ jobs }: { jobs: any[] }) {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [selectedJob, setSelectedJob] = useState('');
+    const [selectedJobData, setSelectedJobData] = useState<any>(null);
 
-    const handleApply = (jobTitle: string) => {
-        setSelectedJob(jobTitle);
+    const handleApply = (job: any) => {
+        setSelectedJobData(job);
         setIsModalOpen(true);
     };
 
@@ -25,31 +25,55 @@ export default function JobBoard({ jobs }: { jobs: any[] }) {
                     </p>
                 </div>
 
-                <div className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {jobs.length > 0 ? (
                         jobs.map((job: any, index: number) => (
-                            <div key={index} className="group bg-white/5 border border-white/10 p-8 flex flex-col md:flex-row items-start md:items-center justify-between hover:bg-white/10 hover:border-brand-orange/50 transition-all cursor-pointer">
+                            <div 
+                                key={index} 
+                                className="group bg-white/5 border border-white/10 p-8 flex flex-col justify-between hover:bg-white/10 hover:border-brand-orange/50 transition-all cursor-pointer relative overflow-hidden"
+                            >
                                 <div>
-                                    <h3 className="text-xl font-bold text-white uppercase tracking-wide mb-2 group-hover:text-brand-orange transition-colors">{job.title}</h3>
-                                    <div className="flex items-center gap-4 text-white/50 text-sm font-mono">
-                                        <span>{job.location}</span>
-                                        <span className="w-1 h-1 bg-white/30 rounded-full"></span>
-                                        <span>{job.type}</span>
+                                    <div className="flex justify-between items-start mb-6">
+                                        <div className="bg-brand-orange/10 text-brand-orange text-[10px] font-bold px-3 py-1 uppercase tracking-widest rounded-lg">
+                                            {job.type}
+                                        </div>
                                     </div>
+                                    
+                                    <h3 className="text-xl font-bold text-white uppercase tracking-wide mb-3 group-hover:text-brand-orange transition-colors">
+                                        {job.title}
+                                    </h3>
+                                    
+                                    <div className="flex items-center gap-2 text-white/50 text-xs font-mono mb-6">
+                                        <span>{job.location}</span>
+                                    </div>
+
                                     {job.description && (
-                                        <p className="text-white/40 text-sm font-light mt-3 max-w-xl leading-relaxed">{job.description}</p>
+                                        <p className="text-white/40 text-sm font-light mb-8 leading-relaxed line-clamp-3">
+                                            {job.description}
+                                        </p>
+                                    )}
+
+                                    {job.deadline && (
+                                        <div className="mb-8 pt-4 border-t border-white/5">
+                                            <p className="text-[10px] text-white/30 uppercase tracking-[0.2em] font-black mb-1">Application Deadline</p>
+                                            <p className="text-xs text-brand-orange font-bold font-mono">{job.deadline}</p>
+                                        </div>
                                     )}
                                 </div>
+
                                 <button
-                                    onClick={() => handleApply(job.title)}
-                                    className="mt-6 md:mt-0 text-brand-orange text-sm font-bold tracking-[0.2em] uppercase border border-brand-orange px-6 py-3 hover:bg-brand-orange hover:text-brand-navy transition-colors text-center inline-block"
+                                    onClick={() => handleApply(job)}
+                                    className="w-full text-white text-xs font-bold tracking-[0.2em] uppercase bg-white/5 border border-white/10 py-4 hover:bg-brand-orange hover:text-brand-navy hover:border-brand-orange transition-all text-center"
                                 >
                                     Apply Now
                                 </button>
+                                
+                                {/* Background design element */}
+                                <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-brand-orange/5 blur-[80px] rounded-full pointer-events-none" />
                             </div>
                         ))
                     ) : (
-                        <div className="bg-white/5 border border-white/10 p-12 text-center rounded-2xl">
+                        <div className="col-span-full bg-white/5 border border-white/10 p-12 text-center rounded-2xl">
                             <p className="text-white/50 text-lg font-light">We currently have no open positions. Please check back later.</p>
                         </div>
                     )}
@@ -59,7 +83,8 @@ export default function JobBoard({ jobs }: { jobs: any[] }) {
             <JobApplicationModal 
                 isOpen={isModalOpen} 
                 onClose={() => setIsModalOpen(false)} 
-                jobTitle={selectedJob} 
+                jobTitle={selectedJobData?.title || ''} 
+                jobDescription={selectedJobData?.description || ''}
             />
         </section>
     );

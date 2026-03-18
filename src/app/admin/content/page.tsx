@@ -348,7 +348,7 @@ export default function ContentEditor() {
                                 <button
                                     onClick={() => {
                                         const newJobs = [...(content.career?.jobs || [])];
-                                        newJobs.push({ title: "Strategic Role", location: "Hub Location", type: "Permanent", description: "" });
+                                        newJobs.push({ title: "Strategic Role", location: "Hub Location", type: "Permanent", description: "", deadline: "" });
                                         setContent({ ...content, career: { ...content.career, jobs: newJobs } });
                                     }}
                                     className="p-4 bg-brand-navy text-white rounded-2xl flex items-center gap-2 hover:bg-brand-orange transition-all shadow-xl font-black uppercase text-[10px] tracking-widest"
@@ -397,6 +397,19 @@ export default function ContentEditor() {
                                                                 newJobs[index].type = e.target.value;
                                                                 setContent({ ...content, career: { ...content.career, jobs: newJobs } });
                                                             }}
+                                                            className="form-input-premium border-b-2"
+                                                        />
+                                                    </InputWrapper>
+                                                    <InputWrapper label="Application Deadline" description="">
+                                                        <input
+                                                            type="text"
+                                                            value={job.deadline || ''}
+                                                            onChange={e => {
+                                                                const newJobs = [...content.career.jobs];
+                                                                newJobs[index].deadline = e.target.value;
+                                                                setContent({ ...content, career: { ...content.career, jobs: newJobs } });
+                                                            }}
+                                                            placeholder="e.g. June 30, 2026"
                                                             className="form-input-premium border-b-2"
                                                         />
                                                     </InputWrapper>

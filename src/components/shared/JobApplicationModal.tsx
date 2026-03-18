@@ -7,9 +7,10 @@ interface JobApplicationModalProps {
     isOpen: boolean;
     onClose: () => void;
     jobTitle: string;
+    jobDescription?: string;
 }
 
-export default function JobApplicationModal({ isOpen, onClose, jobTitle }: JobApplicationModalProps) {
+export default function JobApplicationModal({ isOpen, onClose, jobTitle, jobDescription }: JobApplicationModalProps) {
     const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
     const [errorMsg, setErrorMsg] = useState('');
     const [file, setFile] = useState<File | null>(null);
@@ -151,6 +152,15 @@ export default function JobApplicationModal({ isOpen, onClose, jobTitle }: JobAp
                                 </motion.div>
                             ) : (
                                 <div className="p-6 overflow-y-auto">
+                                    {jobDescription && (
+                                        <div className="mb-8 p-6 bg-gray-50 rounded-2xl border border-gray-100">
+                                            <p className="text-[10px] text-brand-orange font-black uppercase tracking-[0.2em] mb-3">Position Description</p>
+                                            <p className="text-sm text-brand-navy/70 leading-relaxed font-light whitespace-pre-line italic">
+                                                &quot;{jobDescription}&quot;
+                                            </p>
+                                        </div>
+                                    )}
+                                    
                                     <form onSubmit={handleSubmit} className="space-y-5">
                                         
                                         {status === 'error' && (
